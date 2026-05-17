@@ -72,28 +72,6 @@ html,body{height:100%;overflow:hidden;background:#0d0c0a;}
   100%{opacity:0.6;transform:scale(1);}
 }
 
-/* RED LINE */
-.red-line{
-  position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(to bottom,var(--merah),transparent);
-  animation:slideLineDown 1.2s ease .2s both;z-index:3;
-}
-@keyframes slideLineDown{from{clip-path:inset(0 0 100% 0);}to{clip-path:inset(0 0 0% 0);}}
-
-/* GLOW */
-.circle-bg{
-  position:absolute;
-  width:min(750px,160vw);height:min(750px,160vw);
-  border-radius:50%;
-  background:radial-gradient(circle at 50% 45%,#c0392b0e 0%,transparent 65%);
-  top:50%;left:50%;transform:translate(-50%,-55%);
-  animation:pulseCircle 7s ease-in-out infinite;
-  pointer-events:none;z-index:2;
-}
-@keyframes pulseCircle{
-  0%,100%{transform:translate(-50%,-55%) scale(1);}
-  50%{transform:translate(-50%,-55%) scale(1.1);}
-}
 
 /* DECO RINGS */
 .deco-rings{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
@@ -237,9 +215,6 @@ html,body{height:100%;overflow:hidden;background:#0d0c0a;}
   <div class="garuda-bg">
     <img src="pancasila.png" alt="Garuda Pancasila"/>
   </div>
-
-  <div class="red-line"></div>
-  <div class="circle-bg"></div>
 
   <div class="deco-rings">
     <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
