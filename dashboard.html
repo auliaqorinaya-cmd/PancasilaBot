@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>PancasilaBot – Media Pembelajaran Interaktif</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --merah:#C0392B;--merah2:#a93226;
+  --kuning:#F4C542;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:#0d0c0a;}
+
+#landing{
+  position:fixed;inset:0;z-index:9999;
+  background:#0d0c0a;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  transition:opacity .8s ease, transform .8s ease;
+}
+#landing.exit{opacity:0;transform:scale(1.04);pointer-events:none;}
+
+/* GARUDA IMAGE BACKGROUND */
+.garuda-bg{
+  position:absolute;
+  pointer-events:none;z-index:0;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:100vw;
+  display:flex;align-items:center;justify-content:center;
+}
+.garuda-bg img{
+  width:100%;height:auto;
+  opacity:0;
+  animation:garudaReveal 2s ease .3s forwards;
+  object-fit:contain;
+  display:block;
+  mix-blend-mode:luminosity;
+  filter:
+    brightness(0.65)
+    contrast(1.2)
+    saturate(1.4)
+    sepia(0.15);
+  -webkit-mask-image:
+    radial-gradient(ellipse 72% 68% at 50% 50%,
+      black 0%,
+      black 28%,
+      rgba(0,0,0,0.9) 38%,
+      rgba(0,0,0,0.7) 48%,
+      rgba(0,0,0,0.4) 58%,
+      rgba(0,0,0,0.15) 68%,
+      rgba(0,0,0,0.04) 76%,
+      transparent 84%
+    );
+  mask-image:
+    radial-gradient(ellipse 72% 68% at 50% 50%,
+      black 0%,
+      black 28%,
+      rgba(0,0,0,0.9) 38%,
+      rgba(0,0,0,0.7) 48%,
+      rgba(0,0,0,0.4) 58%,
+      rgba(0,0,0,0.15) 68%,
+      rgba(0,0,0,0.04) 76%,
+      transparent 84%
+    );
+}
+@keyframes garudaReveal{
+  0%{opacity:0;transform:scale(0.96);}
+  100%{opacity:0.6;transform:scale(1);}
+}
+
+/* RED LINE */
+.red-line{
+  position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(to bottom,var(--merah),transparent);
+  animation:slideLineDown 1.2s ease .2s both;z-index:3;
+}
+@keyframes slideLineDown{from{clip-path:inset(0 0 100% 0);}to{clip-path:inset(0 0 0% 0);}}
+
+/* GLOW */
+.circle-bg{
+  position:absolute;
+  width:min(750px,160vw);height:min(750px,160vw);
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,#c0392b0e 0%,transparent 65%);
+  top:50%;left:50%;transform:translate(-50%,-55%);
+  animation:pulseCircle 7s ease-in-out infinite;
+  pointer-events:none;z-index:2;
+}
+@keyframes pulseCircle{
+  0%,100%{transform:translate(-50%,-55%) scale(1);}
+  50%{transform:translate(-50%,-55%) scale(1.1);}
+}
+
+/* DECO RINGS */
+.deco-rings{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+.deco-rings svg{width:100%;height:100%;opacity:.04;}
+
+/* SCROLL CONTAINER */
+.lp-scroll{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  display:flex;flex-direction:column;align-items:center;
+  padding:clamp(24px,6vh,60px) 24px clamp(16px,3.5vh,32px);
+  scrollbar-width:none;position:relative;z-index:5;
+}
+.lp-scroll::-webkit-scrollbar{display:none;}
+.lp-inner{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;width:100%;max-width:560px;
+}
+@media(min-width:768px){.lp-inner{max-width:620px;}}
+
+/* BADGE */
+.lp-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.11);
+  color:rgba(255,255,255,0.68);font-size:11px;font-weight:600;
+  letter-spacing:1.6px;text-transform:uppercase;
+  padding:7px 18px;border-radius:40px;
+  margin-bottom:clamp(16px,3vh,30px);
+  animation:fadeUp .8s ease .15s both;
+}
+.lp-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--kuning);animation:blink 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+/* GARUDA EMOJI */
+.lp-garuda{
+  font-size:clamp(60px,12vw,90px);
+  margin-bottom:clamp(12px,2vh,20px);
+  animation:fadeUp .8s ease .25s both, floatGaruda 4s ease-in-out 1s infinite;
+  filter:drop-shadow(0 0 32px rgba(192,57,43,0.55));line-height:1;
+}
+@keyframes floatGaruda{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+@media(min-width:768px){.lp-garuda{font-size:clamp(72px,8vw,100px);}}
+
+/* HEADLINE */
+.lp-headline{
+  font-family:'Fraunces',serif;
+  font-size:clamp(38px,10vw,70px);
+  font-weight:900;line-height:.97;letter-spacing:-2.5px;color:#fff;
+  margin-bottom:clamp(12px,2vh,18px);
+  animation:fadeUp .8s ease .35s both;
+  text-shadow:0 2px 24px rgba(0,0,0,0.5);
+}
+.lp-headline em{font-style:italic;color:var(--kuning);}
+@media(min-width:768px){.lp-headline{font-size:clamp(56px,6.5vw,88px);letter-spacing:-3px;}}
+
+/* SUBTITLE */
+.lp-sub{
+  font-size:clamp(13px,3.5vw,16px);color:rgba(255,255,255,0.5);
+  line-height:1.7;margin-bottom:clamp(20px,3.5vh,34px);
+  font-weight:400;max-width:380px;animation:fadeUp .8s ease .45s both;
+}
+.lp-sub strong{color:rgba(255,255,255,0.82);font-weight:700;}
+@media(min-width:768px){.lp-sub{font-size:17px;max-width:460px;}}
+
+/* SILA PILLS */
+.sila-pills{
+  display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:clamp(24px,4.5vh,42px);animation:fadeUp .8s ease .55s both;
+}
+.sila-pill{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.65);font-size:11px;font-weight:600;
+  padding:6px 13px;border-radius:40px;transition:all .25s;cursor:default;
+}
+.sila-pill:hover{background:rgba(192,57,43,0.25);border-color:rgba(192,57,43,0.55);color:#fff;transform:translateY(-2px);}
+.sila-pill .num{width:18px;height:18px;border-radius:50%;background:var(--merah);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;}
+@media(min-width:768px){
+  .sila-pill{font-size:12px;padding:7px 16px;}
+  .sila-pill .num{width:20px;height:20px;font-size:10px;}
+}
+
+/* CTA */
+.lp-cta{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;gap:11px;
+  background:var(--merah);color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(14px,4vw,16px);font-weight:800;
+  padding:clamp(15px,2.5vw,18px) clamp(32px,7vw,46px);
+  border-radius:60px;border:none;cursor:pointer;letter-spacing:-.3px;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  overflow:hidden;
+  animation:fadeUp .8s ease .65s both, ctaPulse 3.5s ease-in-out 2.2s infinite;
+  box-shadow:0 4px 28px rgba(192,57,43,0.52);
+  min-width:clamp(220px,70vw,280px);
+  -webkit-tap-highlight-color:transparent;
+}
+@media(min-width:768px){.lp-cta{font-size:17px;padding:18px 52px;min-width:300px;}}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 4px 28px rgba(192,57,43,0.52);}
+  50%{box-shadow:0 6px 48px rgba(192,57,43,0.78);}
+}
+.lp-cta:hover{background:var(--merah2);transform:translateY(-3px);box-shadow:0 10px 38px rgba(192,57,43,0.65);}
+.lp-cta:active{transform:scale(0.97);}
+.lp-cta .arrow{width:30px;height:30px;background:rgba(255,255,255,0.18);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;transition:.2s;flex-shrink:0;}
+.lp-cta:hover .arrow{background:rgba(255,255,255,0.28);transform:translateX(4px);}
+.lp-cta::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.14),transparent);animation:shimmer 3.5s ease 2.8s infinite;}
+@keyframes shimmer{0%{left:-100%;}100%{left:220%;}}
+
+/* BOTTOM BAR */
+.lp-bottom{
+  padding:clamp(10px,1.8vh,15px) 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,0.06);
+  position:relative;z-index:5;
+  animation:fadeUp .8s ease .8s both;
+  flex-shrink:0;flex-wrap:wrap;gap:8px;
+}
+.lp-bottom-left{font-size:11px;color:rgba(255,255,255,0.22);font-weight:500;}
+.lp-bottom-right{display:flex;gap:14px;flex-wrap:wrap;}
+.lp-chip{font-size:10px;font-weight:600;color:rgba(255,255,255,0.28);display:flex;align-items:center;gap:4px;}
+.lp-chip span{color:rgba(255,255,255,0.52);}
+@media(min-width:768px){.lp-bottom-left{font-size:12px;}.lp-chip{font-size:11px;}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-height:640px){
+  .lp-garuda{font-size:48px;margin-bottom:8px;}
+  .lp-headline{font-size:clamp(28px,8vw,42px);letter-spacing:-1.5px;}
+  .lp-badge{margin-bottom:12px;}
+  .lp-sub{margin-bottom:14px;font-size:13px;}
+  .sila-pills{margin-bottom:16px;}
+}
+@media(max-width:360px){
+  .sila-pill{font-size:10px;padding:4px 9px;}
+  .lp-bottom-right{display:none;}
+}
+</style>
+</head>
+<body>
+<div id="landing">
+  <div class="garuda-bg">
+    <img src="pancasila.png" alt="Garuda Pancasila"/>
+  </div>
+
+  <div class="red-line"></div>
+  <div class="circle-bg"></div>
+
+  <div class="deco-rings">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="720" cy="450" r="280" stroke="#C0392B" stroke-width="1"/>
+      <circle cx="720" cy="450" r="430" stroke="#C0392B" stroke-width="0.6"/>
+      <circle cx="720" cy="450" r="570" stroke="#C0392B" stroke-width="0.3"/>
+      <line x1="0" y1="450" x2="1440" y2="450" stroke="#fff" stroke-width="0.2"/>
+      <line x1="720" y1="0" x2="720" y2="900" stroke="#fff" stroke-width="0.2"/>
+    </svg>
+  </div>
+
+  <div class="lp-scroll">
+    <div class="lp-inner">
+      <div class="lp-badge"><div class="dot"></div>Media Pembelajaran Interaktif</div>
+      <div class="lp-garuda">🦅</div>
+      <h1 class="lp-headline">Belajar<br><em>Pancasila</em><br>Lebih Seru</h1>
+      <p class="lp-sub"> <strong>Jelajahi 5 sila, sejarah, dan nilai-nilai Pancasila bersama Sila.</strong></p>
+      <div class="sila-pills">
+        <div class="sila-pill"><div class="num">1</div>Ketuhanan</div>
+        <div class="sila-pill"><div class="num">2</div>Kemanusiaan</div>
+        <div class="sila-pill"><div class="num">3</div>Persatuan</div>
+        <div class="sila-pill"><div class="num">4</div>Kerakyatan</div>
+        <div class="sila-pill"><div class="num">5</div>Keadilan Sosial</div>
+      </div>
+      <button class="lp-cta" onclick="masukApp()">
+        Mulai Belajar Sekarang
+      </button>
+    </div>
+  </div>
+
+  <div class="lp-bottom">
+    <div class="lp-bottom-left">© 2025 PancasilaBot</div>
+    <div class="lp-bottom-right">
+      <div class="lp-chip">🧠 <span>Kuis Interaktif</span></div>
+      <div class="lp-chip">🏅 <span>Sistem Medali</span></div>
+      <div class="lp-chip">📊 <span>Progress Tracker</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  const nama = localStorage.getItem('pancasilabot_nama');
+  if (nama) {
+    // Sudah pernah login, langsung ke app
+    window.location.href = 'menuutama.html';
+  }
+});
+
+function masukApp() {
+  document.getElementById('landing').classList.add('exit');
+  setTimeout(function() { window.location.href = 'onboarding1.html'; }, 900);
+}
+function adjustGaruda() {
+  var w = window.innerWidth, h = window.innerHeight;
+  var bg = document.querySelector('.garuda-bg');
+  if (!bg) return;
+  if (w >= 1200) {
+    bg.style.width = w + 'px';
+    bg.style.transform = 'translate(-50%, -50%)';
+  } else if (w >= 768) {
+    bg.style.width = w + 'px';
+    bg.style.transform = 'translate(-50%, -50%)';
+  } else if (h < 500) {
+    bg.style.width = (w * 0.95) + 'px';
+    bg.style.transform = 'translate(-50%, -50%)';
+  } else {
+    bg.style.width = (w * 0.98) + 'px';
+    bg.style.transform = 'translate(-50%, -50%)';
+  }
+}
+adjustGaruda();
+window.addEventListener('resize', adjustGaruda);
+</script>
+</body>
+</html>

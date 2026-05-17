@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PancasilaBot – Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --merah:#C0392B;--merah2:#a93226;
+  --kuning:#F4C542;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:#0f0e0c;}
+
+#onboarding{
+  position:fixed;inset:0;
+  background:#0f0e0c;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  animation:obIn .5s ease both;
+}
+@keyframes obIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* GARUDA BACKGROUND */
+.garuda-bg{
+  position:absolute;
+  pointer-events:none;z-index:0;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:100vw;
+  display:flex;align-items:center;justify-content:center;
+}
+.garuda-bg img{
+  width:100%;height:auto;
+  opacity:0;
+  animation:garudaReveal 2s ease .3s forwards;
+  object-fit:contain;
+  display:block;
+  mix-blend-mode:luminosity;
+  filter:brightness(0.55) contrast(1.2) saturate(1.3) sepia(0.1);
+  -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 50%,
+    black 0%,black 28%,rgba(0,0,0,0.9) 38%,rgba(0,0,0,0.7) 48%,
+    rgba(0,0,0,0.4) 58%,rgba(0,0,0,0.15) 68%,rgba(0,0,0,0.04) 76%,transparent 84%);
+  mask-image:radial-gradient(ellipse 72% 68% at 50% 50%,
+    black 0%,black 28%,rgba(0,0,0,0.9) 38%,rgba(0,0,0,0.7) 48%,
+    rgba(0,0,0,0.4) 58%,rgba(0,0,0,0.15) 68%,rgba(0,0,0,0.04) 76%,transparent 84%);
+}
+@keyframes garudaReveal{
+  0%{opacity:0;transform:scale(0.96);}
+  100%{opacity:0.55;transform:scale(1);}
+}
+
+#onboarding::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse at 60% 20%, rgba(192,57,43,0.15) 0%, transparent 60%),
+             radial-gradient(ellipse at 20% 80%, rgba(244,197,66,0.08) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+.ob-steps{
+  position:absolute;top:28px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;z-index:5;
+}
+.ob-step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);transition:.3s;}
+.ob-step-dot.active{background:var(--kuning);width:24px;border-radius:4px;}
+.ob-step-dot.done{background:rgba(255,255,255,0.5);}
+
+.ob-inner{
+  position:relative;z-index:5;
+  width:100%;max-width:480px;
+  padding:0 28px;
+  display:flex;flex-direction:column;
+  align-items:center;
+}
+
+.ob-card{
+  width:100%;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  animation:obCardIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes obCardIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+.ob-icon{font-size:72px;margin-bottom:20px;filter:drop-shadow(0 0 30px rgba(192,57,43,0.4));animation:floatGaruda 4s ease-in-out infinite;}
+@keyframes floatGaruda{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.ob-title{font-family:'Fraunces',serif;font-size:clamp(28px,5vw,42px);font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:10px;}
+.ob-title em{font-style:italic;color:var(--kuning);}
+.ob-sub{font-size:14px;color:rgba(255,255,255,0.85);line-height:1.7;margin-bottom:32px;max-width:380px;}
+
+.ob-input-wrap{width:100%;margin-bottom:20px;position:relative;}
+.ob-input{
+  width:100%;
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:16px;
+  padding:16px 20px;
+  font-size:18px;font-weight:700;
+  color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  text-align:center;
+  outline:none;
+  transition:.25s;
+  letter-spacing:-.3px;
+}
+.ob-input::placeholder{color:rgba(255,255,255,0.25);font-weight:400;}
+.ob-input:focus{
+  border-color:var(--kuning);
+  background:rgba(255,255,255,0.12);
+  box-shadow:0 0 0 4px rgba(244,197,66,0.12);
+}
+
+.ob-btn{
+  width:100%;
+  background:var(--merah);
+  color:#fff;border:none;
+  border-radius:16px;padding:16px;
+  font-size:15px;font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;transition:.2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  letter-spacing:-.2px;
+}
+.ob-btn:hover{background:var(--merah2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,0.4);}
+.ob-btn:active{transform:translateY(0);}
+.ob-btn:disabled{background:rgba(255,255,255,0.1);cursor:not-allowed;transform:none;box-shadow:none;}
+</style>
+</head>
+<body>
+
+<div id="onboarding">
+  <div class="garuda-bg">
+    <img src="pancasila.png" alt="Garuda Pancasila"/>
+  </div>
+
+  <div class="ob-steps">
+    <div class="ob-step-dot active"></div>
+    <div class="ob-step-dot"></div>
+  </div>
+  <div class="ob-inner">
+    <div class="ob-card">
+      <div class="ob-icon">🦅</div>
+      <h2 class="ob-title">Hai! Siapa<br><em>namamu?</em></h2>
+      <p class="ob-sub">Perkenalkan dirimu dulu yuk, biar Sila bisa menyapa dengan lebih personal!</p>
+      <div class="ob-input-wrap">
+        <input class="ob-input" id="namaInput" type="text" placeholder="Ketik namamu di sini..." maxlength="30"
+          oninput="cekNama()" onkeydown="if(event.key==='Enter')lanjut()"/>
+      </div>
+      <button class="ob-btn" id="btnStep0" onclick="lanjut()" disabled>
+        Lanjut <span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function cekNama() {
+  const val = document.getElementById('namaInput').value.trim();
+  document.getElementById('btnStep0').disabled = val.length < 2;
+}
+
+function lanjut() {
+  const nama = document.getElementById('namaInput').value.trim();
+  if (nama.length < 2) return;
+  localStorage.setItem('pancasilabot_nama', nama);
+  window.location.href = 'onboarding2.html';
+}
+
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('namaInput').focus(), 300);
+});
+</script>
+</body>
+</html>

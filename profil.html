@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PancasilaBot – Profil</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --merah:#C0392B;--merah2:#a93226;--merah3:#e74c3c;
+  --kuning:#F4C542;--kuning2:#e6b800;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+html,body{min-height:100%;background:#0d0c0a;color:#fff;overflow-x:hidden;}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:#C0392B;
+  height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;
+  flex-shrink:0;
+}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.btn-back{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  color:#fff;
+  border-radius:10px;padding:7px 14px;
+  font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  transition:.2s;
+  text-decoration:none;
+}
+.btn-back:hover{background:rgba(255,255,255,0.25);}
+.btn-back:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.topbar-title{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-size:14px;font-weight:700;color:#fff;
+}
+.topbar-logo{width:30px;height:30px;border-radius:50%;overflow:hidden;background:#fff;flex-shrink:0;}
+.topbar-logo img{width:100%;height:100%;object-fit:cover;}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  padding:40px 20px 0;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:-40px;left:50%;transform:translateX(-50%);
+  width:400px;height:300px;
+  background:radial-gradient(ellipse at 50% 30%, rgba(192,57,43,0.25) 0%, transparent 65%);
+  pointer-events:none;
+}
+.avatar-ring{
+  position:relative;
+  width:90px;height:90px;
+  margin-bottom:14px;
+}
+.avatar-ring::before{
+  content:'';
+  position:absolute;inset:-3px;
+  border-radius:50%;
+  background:conic-gradient(var(--kuning) 0%, var(--merah) 40%, transparent 60%);
+  animation:spinRing 6s linear infinite;
+}
+@keyframes spinRing{to{transform:rotate(360deg);}}
+.avatar-ring::after{
+  content:'';
+  position:absolute;inset:-3px;
+  border-radius:50%;
+  background:conic-gradient(transparent 60%, rgba(255,255,255,0.05) 100%);
+  animation:spinRing 6s linear infinite;
+}
+.avatar-inner{
+  position:absolute;inset:3px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#C0392B,#7b1a12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;font-weight:900;color:#fff;
+  font-family:'Fraunces',serif;
+  z-index:1;
+  overflow:hidden;
+}
+.hero-name{
+  font-family:'Fraunces',serif;
+  font-size:clamp(26px,5vw,38px);
+  font-weight:900;letter-spacing:-1px;
+  color:#fff;margin-bottom:4px;
+}
+.hero-name em{font-style:italic;color:var(--kuning);}
+.hero-subtitle{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px;letter-spacing:.5px;text-transform:uppercase;font-weight:600;}
+
+/* LEVEL BADGE */
+.level-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(244,197,66,0.1);
+  border:1px solid rgba(244,197,66,0.25);
+  border-radius:40px;padding:8px 18px;
+  margin-bottom:32px;
+}
+.level-badge .lb-icon{font-size:18px;}
+.level-badge .lb-text{font-size:13px;font-weight:700;color:var(--kuning);}
+.level-badge .lb-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-left:2px;}
+
+/* ── CONTENT ── */
+.content{padding:0 16px 40px;max-width:560px;margin:0 auto;}
+
+/* SECTION */
+.section{margin-bottom:24px;}
+.section-label{
+  font-size:10px;font-weight:700;
+  color:rgba(255,255,255,0.35);
+  letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-label::after{
+  content:'';flex:1;height:1px;
+  background:rgba(255,255,255,0.07);
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;
+  overflow:hidden;
+}
+
+/* PROGRESS LIST */
+.prog-list{display:flex;flex-direction:column;}
+.prog-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:.2s;
+}
+.prog-item:last-child{border-bottom:none;}
+.prog-item:hover{background:rgba(255,255,255,0.03);}
+.pi-num{
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(192,57,43,0.2);
+  border:1px solid rgba(192,57,43,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:var(--merah3);
+  flex-shrink:0;
+}
+.pi-num.done{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.35);color:#2ecc71;}
+.pi-body{flex:1;min-width:0;}
+.pi-name{font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pi-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.pi-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(.22,1,.36,1);}
+.pi-fill.red{background:linear-gradient(90deg,var(--merah),var(--merah3));}
+.pi-fill.green{background:linear-gradient(90deg,#27ae60,#2ecc71);}
+.pi-fill.locked{background:rgba(255,255,255,0.12);}
+.pi-pct{font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);flex-shrink:0;min-width:36px;text-align:right;}
+.pi-pct.done{color:#2ecc71;}
+.pi-lock{font-size:16px;opacity:.4;flex-shrink:0;}
+
+/* MEDALI GRID */
+.medal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:rgba(255,255,255,0.07);
+}
+.medal-cell{
+  background:#111110;
+  padding:20px 16px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:6px;
+  transition:.2s;
+  position:relative;
+  overflow:hidden;
+}
+.medal-cell:hover{background:#161513;}
+.medal-cell.earned{background:#110d00;}
+.medal-cell.earned::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(244,197,66,0.1) 0%, transparent 70%);
+  pointer-events:none;
+}
+.medal-cell:first-child{border-radius:16px 0 0 0;}
+.medal-cell:nth-child(2){border-radius:0 16px 0 0;}
+.medal-cell:nth-child(3){border-radius:0 0 0 16px;}
+.medal-cell:last-child{border-radius:0 0 16px 0;}
+.medal-icon-wrap{font-size:32px;line-height:1;margin-bottom:2px;}
+.medal-name{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);}
+.medal-name.earned{color:rgba(244,197,66,0.9);}
+.medal-lock{font-size:20px;opacity:.25;}
+
+/* LEVEL GRID */
+.level-grid{display:flex;flex-direction:column;}
+.level-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  transition:.2s;
+}
+.level-row:last-child{border-bottom:none;}
+.level-row:hover{background:rgba(255,255,255,0.02);}
+.lr-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);flex:1;}
+.lr-stars{
+  display:flex;gap:3px;
+}
+.star{
+  width:16px;height:16px;border-radius:4px;
+  background:rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;
+  transition:background .3s;
+}
+.star.filled{background:rgba(244,197,66,0.2);color:var(--kuning);}
+.star.filled.green{background:rgba(39,174,96,0.2);color:#2ecc71;}
+.lr-badge{
+  font-size:10px;font-weight:700;
+  padding:3px 8px;border-radius:6px;
+  white-space:nowrap;
+}
+.lr-badge.done{background:rgba(39,174,96,0.15);color:#2ecc71;}
+.lr-badge.progress{background:rgba(192,57,43,0.15);color:var(--merah3);}
+.lr-badge.locked{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.25);}
+
+/* LOCKED ROW */
+.level-row.locked-row .lr-label{color:rgba(255,255,255,0.3);}
+
+/* STATS ROW */
+.stats-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:1px;background:rgba(255,255,255,0.07);
+  border-radius:16px;overflow:hidden;
+  margin-bottom:24px;
+}
+.stat-cell{
+  background:#111110;
+  padding:18px 10px;text-align:center;
+}
+.stat-cell:first-child{border-radius:16px 0 0 16px;}
+.stat-cell:last-child{border-radius:0 16px 16px 0;}
+.stat-num{font-family:'Fraunces',serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;}
+.stat-label{font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+/* RESET BTN */
+.btn-reset{
+  width:100%;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:rgba(192,57,43,0.08);
+  border:1px solid rgba(192,57,43,0.2);
+  color:rgba(192,57,43,0.7);
+  border-radius:12px;padding:13px;
+  font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  transition:.2s;
+}
+.btn-reset:hover{background:rgba(192,57,43,0.15);color:var(--merah3);border-color:rgba(192,57,43,0.4);}
+
+/* KONFIRMASI MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.modal{
+  background:#1a1916;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:28px 24px;
+  max-width:320px;width:90%;text-align:center;
+  animation:popIn .25s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+@keyframes popIn{from{transform:scale(.88);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-icon{font-size:40px;margin-bottom:12px;}
+.modal h3{font-size:17px;font-weight:800;color:#fff;margin-bottom:8px;}
+.modal p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:20px;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns button{flex:1;padding:12px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;}
+.btn-ya{background:var(--merah);color:#fff;}
+.btn-ya:hover{background:var(--merah2);}
+.btn-tidak{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.7);}
+.btn-tidak:hover{background:rgba(255,255,255,0.12);color:#fff;}
+
+/* ANIMATION */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp .5s cubic-bezier(.22,1,.36,1) both;}
+.fade-up:nth-child(1){animation-delay:.05s;}
+.fade-up:nth-child(2){animation-delay:.1s;}
+.fade-up:nth-child(3){animation-delay:.15s;}
+.fade-up:nth-child(4){animation-delay:.2s;}
+.fade-up:nth-child(5){animation-delay:.25s;}
+.fade-up:nth-child(6){animation-delay:.3s;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="menuutama.html" class="btn-back">Kembali</a>
+  <div class="topbar-title">Profil</div>
+  <div class="topbar-logo">
+    <img src="pancasila.png" alt="logo"/>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="avatar-ring">
+    <div class="avatar-inner" id="avatarInner">?</div>
+  </div>
+  <div class="hero-name" id="heroName">Pelajar <em>Pancasila</em></div>
+  <div class="hero-subtitle" id="heroSubtitle">Anggota PancasilaBot</div>
+
+  <div class="level-badge" id="levelBadge">
+    <div class="lb-icon">🎖️</div>
+    <div class="lb-text" id="levelBadgeText">Pemula</div>
+    <div class="lb-sub" id="levelBadgeSub">— terus belajar!</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- STATS -->
+  <div class="stats-row fade-up">
+    <div class="stat-cell">
+      <div class="stat-num" id="statTopik">0</div>
+      <div class="stat-label">Topik Dibuka</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" id="statMedali">0</div>
+      <div class="stat-label">Medali</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" id="statLevel">0</div>
+      <div class="stat-label">Level Selesai</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS MATERI -->
+  <div class="section fade-up">
+    <div class="section-label">📈 Progress Materi</div>
+    <div class="card">
+      <div class="prog-list" id="progList"></div>
+    </div>
+  </div>
+
+  <!-- MEDALI -->
+  <div class="section fade-up">
+    <div class="section-label">🏅 Koleksi Medali</div>
+    <div class="card">
+      <div class="medal-grid" id="medalGrid"></div>
+    </div>
+  </div>
+
+  <!-- LEVEL KUIS -->
+  <div class="section fade-up">
+    <div class="section-label">🧠 Progress Kuis</div>
+    <div class="card">
+      <div class="level-grid" id="levelGrid"></div>
+    </div>
+  </div>
+
+  <!-- RESET -->
+  <div class="section fade-up">
+    <button class="btn-reset" onclick="showReset()">🔄 Reset Semua Progress</button>
+  </div>
+
+</div>
+
+<!-- MODAL KONFIRMASI -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <h3>Reset Progress?</h3>
+    <p>Semua data akan dihapus — progress belajar, level kuis, medali, dan nama profil. Aksi ini tidak bisa dibatalkan!</p>
+    <div class="modal-btns">
+      <button class="btn-tidak" onclick="hideReset()">Batal</button>
+      <button class="btn-ya" onclick="doReset()">Ya, Reset!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── LOAD DATA ── */
+function getDeviceId(){
+  let id = localStorage.getItem('pancasilabot_deviceId');
+  if(!id){ id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); localStorage.setItem('pancasilabot_deviceId',id); }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
+const STORAGE_KEY = 'pancasilabot_progress_' + DEVICE_ID;
+const MAX_LEVEL = 5;
+
+let nama = localStorage.getItem('pancasilabot_nama') || 'Pelajar';
+let progress = {
+  kuisLevel:{sila1:1,sila2:1,sila3:1,sila4:1,sila5:1},
+  kuisLevelDone:{sila1:0,sila2:0,sila3:0,sila4:0,sila5:0},
+  gabunganUnlocked:false,
+  gabunganLevel:1,
+  gabunganLevelDone:0,
+  progressSila:{1:0,2:0,3:0,4:0,5:0},
+  progressGab:0,
+  medali:{med1:false,med2:false,med3:false,medKuis:false},
+  openedTopics:[]
+};
+
+try{
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ const d = JSON.parse(raw); Object.assign(progress, d); }
+}catch(e){}
+
+/* ── NAMA ── */
+if(!nama){ window.location.href = 'onboarding1.html'; }
+document.getElementById('heroName').innerHTML = nama + ' <em>🦅</em>';
+document.getElementById('heroSubtitle').textContent = 'Pelajar Pancasila';
+document.getElementById('avatarInner').textContent = nama.charAt(0).toUpperCase();
+
+/* ── LEVEL BADGE ── */
+function getLevelTitle(){
+  const totalDone = Object.values(progress.kuisLevelDone).reduce((a,b)=>a+b,0) + progress.gabunganLevelDone;
+  if(totalDone >= 26) return {icon:'👑', title:'Grandmaster Pancasila', sub:'— semua level takluk!'};
+  if(totalDone >= 20) return {icon:'🏆', title:'Juara Pancasila', sub:'— hampir sempurna!'};
+  if(totalDone >= 15) return {icon:'🎖️', title:'Pejuang Pancasila', sub:'— sangat hebat!'};
+  if(totalDone >= 10) return {icon:'⭐', title:'Pendekar Pancasila', sub:'— terus semangat!'};
+  if(totalDone >= 5)  return {icon:'📚', title:'Pelajar Aktif', sub:'— progres bagus!'};
+  if(totalDone >= 1)  return {icon:'🌱', title:'Pelajar Baru', sub:'— terus belajar!'};
+  return {icon:'🎓', title:'Pemula', sub:'— selamat datang!'};
+}
+const lv = getLevelTitle();
+document.getElementById('levelBadge').querySelector('.lb-icon').textContent = lv.icon;
+document.getElementById('levelBadgeText').textContent = lv.title;
+document.getElementById('levelBadgeSub').textContent = lv.sub;
+
+/* ── STATS ── */
+const openedTopics = Array.isArray(progress.openedTopics) ? progress.openedTopics : [];
+document.getElementById('statTopik').textContent = openedTopics.length;
+const totalMedali = Object.values(progress.medali).filter(Boolean).length;
+document.getElementById('statMedali').textContent = totalMedali;
+const totalLevel = Object.values(progress.kuisLevelDone).reduce((a,b)=>a+b,0) + progress.gabunganLevelDone;
+document.getElementById('statLevel').textContent = totalLevel;
+
+/* ── PROGRESS MATERI ── */
+const SILA_NAMES = [
+  'Ketuhanan Yang Maha Esa',
+  'Kemanusiaan yang Adil dan Beradab',
+  'Persatuan Indonesia',
+  'Kerakyatan / Permusyawaratan',
+  'Keadilan Sosial'
+];
+const progList = document.getElementById('progList');
+const ps = progress.progressSila;
+
+for(let i=1;i<=5;i++){
+  const pct = ps[i] || 0;
+  const done = pct >= 100;
+  const row = document.createElement('div');
+  row.className = 'prog-item';
+  row.innerHTML = `
+    <div class="pi-num ${done?'done':''}">${done?'✓':i}</div>
+    <div class="pi-body">
+      <div class="pi-name">Sila ke-${i}: ${SILA_NAMES[i-1]}</div>
+      <div class="pi-bar"><div class="pi-fill ${done?'green':'red'}" id="pfill${i}" style="width:0%"></div></div>
+    </div>
+    <div class="pi-pct ${done?'done':''}">${pct}%</div>
+  `;
+  progList.appendChild(row);
+}
+
+// Tambah baris kuis gabungan
+const gabPct = progress.progressGab || 0;
+const gabDone = gabPct >= 100;
+const gabRow = document.createElement('div');
+gabRow.className = 'prog-item';
+if(!progress.gabunganUnlocked){
+  gabRow.innerHTML = `
+    <div class="pi-num" style="opacity:.3">🔒</div>
+    <div class="pi-body">
+      <div class="pi-name" style="color:rgba(255,255,255,0.3)">Kuis Gabungan</div>
+      <div class="pi-bar"><div class="pi-fill locked" style="width:0%"></div></div>
+    </div>
+    <div class="pi-lock">🔒</div>
+  `;
+} else {
+  gabRow.innerHTML = `
+    <div class="pi-num ${gabDone?'done':''}">🏆</div>
+    <div class="pi-body">
+      <div class="pi-name">Kuis Gabungan</div>
+      <div class="pi-bar"><div class="pi-fill ${gabDone?'green':'red'}" id="pfillGab" style="width:0%"></div></div>
+    </div>
+    <div class="pi-pct ${gabDone?'done':''}">${gabPct}%</div>
+  `;
+}
+progList.appendChild(gabRow);
+
+// Animate bars after paint
+requestAnimationFrame(()=>{
+  setTimeout(()=>{
+    for(let i=1;i<=5;i++){
+      const el = document.getElementById('pfill'+i);
+      if(el) el.style.width = (ps[i]||0) + '%';
+    }
+    const gEl = document.getElementById('pfillGab');
+    if(gEl) gEl.style.width = gabPct + '%';
+  },100);
+});
+
+/* ── MEDALI ── */
+const MEDALS = [
+  {id:'med1', icon:'🥇', name:'Pelajar Sila 1', desc:'Pelajari Sila ke-1'},
+  {id:'med2', icon:'🥈', name:'Pelajar Sila 2', desc:'Pelajari Sila ke-2'},
+  {id:'med3', icon:'🥉', name:'Pelajar Sila 3', desc:'Pelajari Sila ke-3'},
+  {id:'med4', icon:'🏅', name:'Pelajar Sila 4', desc:'Pelajari Sila ke-4'},
+  {id:'med5', icon:'🎖️', name:'Pelajar Sila 5', desc:'Pelajari Sila ke-5'},
+  {id:'medKuis', icon:'🏆', name:'Juara Kuis', desc:'Selesaikan Kuis Gabungan'},
+];
+const medalGrid = document.getElementById('medalGrid');
+MEDALS.forEach(m=>{
+  const earned = progress.medali[m.id];
+  const cell = document.createElement('div');
+  cell.className = 'medal-cell' + (earned?' earned':'');
+  if(earned){
+    cell.innerHTML = `<div class="medal-icon-wrap">${m.icon}</div><div class="medal-name earned">${m.name}</div>`;
+  } else {
+    cell.innerHTML = `<div class="medal-lock">🔒</div><div class="medal-name">${m.name}</div>`;
+  }
+  medalGrid.appendChild(cell);
+});
+
+/* ── LEVEL KUIS ── */
+const levelGrid = document.getElementById('levelGrid');
+const SILA_SHORT = ['Ketuhanan','Kemanusiaan','Persatuan','Kerakyatan','Keadilan Sosial'];
+for(let i=1;i<=5;i++){
+  const key = 'sila'+i;
+  const done = progress.kuisLevelDone[key] || 0;
+  const allDone = done >= MAX_LEVEL;
+  const row = document.createElement('div');
+  row.className = 'level-row';
+  const starsHTML = Array.from({length:MAX_LEVEL},(_,j)=>`<div class="star ${j<done?(allDone?'filled green':'filled'):''}">${j<done?'★':'☆'}</div>`).join('');
+  const badge = allDone
+    ? `<span class="lr-badge done">Selesai ✓</span>`
+    : done > 0
+    ? `<span class="lr-badge progress">Lv ${done}/${MAX_LEVEL}</span>`
+    : `<span class="lr-badge locked">Belum mulai</span>`;
+  row.innerHTML = `
+    <div class="lr-label">Sila ke-${i}: ${SILA_SHORT[i-1]}</div>
+    <div class="lr-stars">${starsHTML}</div>
+    ${badge}
+  `;
+  levelGrid.appendChild(row);
+}
+
+// Kuis gabungan row
+const gabLevelDone = progress.gabunganLevelDone || 0;
+const gabAllDone = gabLevelDone >= MAX_LEVEL;
+const gabLevelRow = document.createElement('div');
+gabLevelRow.className = 'level-row' + (!progress.gabunganUnlocked?' locked-row':'');
+if(!progress.gabunganUnlocked){
+  gabLevelRow.innerHTML = `
+    <div class="lr-label">🔒 Kuis Gabungan</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.2)">Selesaikan semua sila terlebih dahulu</div>
+  `;
+} else {
+  const gabStarsHTML = Array.from({length:MAX_LEVEL},(_,j)=>`<div class="star ${j<gabLevelDone?(gabAllDone?'filled green':'filled'):''}">${j<gabLevelDone?'★':'☆'}</div>`).join('');
+  const gabBadge = gabAllDone
+    ? `<span class="lr-badge done">Selesai ✓</span>`
+    : gabLevelDone > 0
+    ? `<span class="lr-badge progress" style="color:var(--kuning);background:rgba(244,197,66,0.1)">Lv ${gabLevelDone}/${MAX_LEVEL}</span>`
+    : `<span class="lr-badge locked">Belum mulai</span>`;
+  gabLevelRow.innerHTML = `
+    <div class="lr-label">🏆 Kuis Gabungan</div>
+    <div class="lr-stars">${gabStarsHTML}</div>
+    ${gabBadge}
+  `;
+}
+levelGrid.appendChild(gabLevelRow);
+
+/* ── RESET ── */
+function showReset(){ document.getElementById('overlay').classList.add('show'); }
+function hideReset(){ document.getElementById('overlay').classList.remove('show'); }
+function doReset(){
+  const keys = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith('pancasilabot_')) keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>

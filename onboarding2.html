@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PancasilaBot – Siap Belajar!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --merah:#C0392B;--merah2:#a93226;
+  --kuning:#F4C542;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:#0f0e0c;}
+
+#onboarding{
+  position:fixed;inset:0;
+  background:#0f0e0c;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  animation:obIn .5s ease both;
+}
+@keyframes obIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+.garuda-bg{
+  position:absolute;
+  pointer-events:none;z-index:0;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:100vw;
+  display:flex;align-items:center;justify-content:center;
+}
+.garuda-bg img{
+  width:100%;height:auto;
+  opacity:0;
+  animation:garudaReveal 2s ease .3s forwards;
+  object-fit:contain;
+  display:block;
+  mix-blend-mode:luminosity;
+  filter:brightness(0.55) contrast(1.2) saturate(1.3) sepia(0.1);
+  -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 50%,
+    black 0%,black 28%,rgba(0,0,0,0.9) 38%,rgba(0,0,0,0.7) 48%,
+    rgba(0,0,0,0.4) 58%,rgba(0,0,0,0.15) 68%,rgba(0,0,0,0.04) 76%,transparent 84%);
+  mask-image:radial-gradient(ellipse 72% 68% at 50% 50%,
+    black 0%,black 28%,rgba(0,0,0,0.9) 38%,rgba(0,0,0,0.7) 48%,
+    rgba(0,0,0,0.4) 58%,rgba(0,0,0,0.15) 68%,rgba(0,0,0,0.04) 76%,transparent 84%);
+}
+@keyframes garudaReveal{
+  0%{opacity:0;transform:scale(0.96);}
+  100%{opacity:0.55;transform:scale(1);}
+}
+
+#onboarding::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse at 60% 20%, rgba(192,57,43,0.15) 0%, transparent 60%),
+             radial-gradient(ellipse at 20% 80%, rgba(244,197,66,0.08) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+/* 2 dots aja sekarang */
+.ob-steps{
+  position:absolute;top:28px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;z-index:5;
+}
+.ob-step-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);transition:.3s;}
+.ob-step-dot.active{background:var(--kuning);width:24px;border-radius:4px;}
+.ob-step-dot.done{background:rgba(255,255,255,0.5);}
+
+.ob-inner{
+  position:relative;z-index:5;
+  width:100%;max-width:480px;
+  padding:0 28px;
+  display:flex;flex-direction:column;
+  align-items:center;
+}
+
+.ob-card{
+  width:100%;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  animation:obCardIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes obCardIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+.ob-icon{font-size:72px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(192,57,43,0.4));animation:floatGaruda 4s ease-in-out infinite;}
+@keyframes floatGaruda{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+.ob-greeting-name{
+  font-family:'Fraunces',serif;
+  font-size:clamp(32px,6vw,54px);
+  font-weight:900;color:var(--kuning);
+  letter-spacing:-1px;margin-bottom:6px;
+}
+.ob-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:20px;max-width:380px;}
+
+.ob-feature-list{
+  display:flex;flex-direction:column;gap:8px;
+  width:100%;margin-bottom:28px;
+  text-align:left;
+}
+.ob-feature-item{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:12px 14px;
+}
+.ob-feature-item .fi-icon{font-size:20px;flex-shrink:0;}
+.ob-feature-item .fi-text{font-size:12.5px;color:rgba(255,255,255,0.7);line-height:1.4;}
+.ob-feature-item .fi-text b{color:#fff;}
+
+.ob-btn{
+  width:100%;
+  background:var(--merah);
+  color:#fff;border:none;
+  border-radius:16px;padding:16px;
+  font-size:15px;font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;transition:.2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  letter-spacing:-.2px;
+}
+.ob-btn:hover{background:var(--merah2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(192,57,43,0.4);}
+.ob-btn:active{transform:translateY(0);}
+
+.ob-btn-secondary{
+  margin-top:10px;
+  background:none;border:none;
+  color:rgba(255,255,255,0.4);font-size:12px;
+  cursor:pointer;font-family:inherit;
+  padding:8px;transition:.2s;
+}
+.ob-btn-secondary:hover{color:rgba(255,255,255,0.7);}
+</style>
+</head>
+<body>
+
+<div id="onboarding">
+  <div class="garuda-bg">
+    <img src="pancasila.png" alt="Garuda Pancasila"/>
+  </div>
+
+  <!-- 2 dots: done + active -->
+  <div class="ob-steps">
+    <div class="ob-step-dot done"></div>
+    <div class="ob-step-dot active"></div>
+  </div>
+
+  <div class="ob-inner">
+    <div class="ob-card">
+      <div class="ob-icon">🦅</div>
+      <div class="ob-greeting-name" id="greetingName">Halo!</div>
+      <p class="ob-sub">Kamu siap belajar Pancasila bersama <b style="color:rgba(255,255,255,0.85)">Sila</b>. Ini yang bisa kamu lakukan:</p>
+      <div class="ob-feature-list">
+        <div class="ob-feature-item">
+          <div class="fi-icon">💬</div>
+          <div class="fi-text"><b>Chat per Sila</b> — Setiap sila punya room chat sendiri. Riwayat tidak hilang saat pindah topik.</div>
+        </div>
+        <div class="ob-feature-item">
+          <div class="fi-icon">🧠</div>
+          <div class="fi-text"><b>Kuis Berlevel</b> — 5 level per sila, makin naik makin menantang. Selesaikan semua untuk buka Kuis Gabungan!</div>
+        </div>
+        <div class="ob-feature-item">
+          <div class="fi-icon">🏅</div>
+          <div class="fi-text"><b>Medali & Progress</b> — Raih medali tiap sila + medali Juara Gabungan spesial!</div>
+        </div>
+      </div>
+      <button class="ob-btn" onclick="mulaiApp()">
+        🚀 Mulai Belajar Sekarang!
+      </button>
+      <button class="ob-btn-secondary" onclick="kembali()">Kembali</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const nama = localStorage.getItem('pancasilabot_nama');
+if (!nama) { window.location.href = 'onboarding1.html'; }
+document.getElementById('greetingName').textContent = 'Halo, ' + nama + '! 👋';
+
+function mulaiApp() {
+  const el = document.getElementById('onboarding');
+  el.style.transition = 'opacity .6s ease, transform .6s ease';
+  el.style.opacity = '0';
+  el.style.transform = 'scale(1.04)';
+  setTimeout(function() { window.location.href = 'menuutama.html'; }, 650);
+}
+
+function kembali() {
+  window.location.href = 'onboarding1.html';
+}
+</script>
+</body>
+</html>

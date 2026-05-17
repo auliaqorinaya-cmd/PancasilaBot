@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PancasilaBot – Ruang Belajar</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --merah:#C0392B;--merah2:#a93226;--merah3:#e74c3c;
+  --kuning:#F4C542;--kuning2:#e6b800;
+  --putih:#fff;--gelap:#0f0e0c;--gelap2:#1a1916;
+  --teks:#1a1a1a;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden;}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;animation:fadeInApp .6s ease both;}
+@keyframes fadeInApp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.topbar{background:#C0392B;color:#fff;padding:0 16px;height:50px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-brand{display:flex;align-items:center;gap:8px;}
+.topbar-logo{width:32px;height:32px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;}
+.topbar-title{font-size:15px;font-weight:800;}
+.topbar-room-label{font-size:13px;font-weight:600;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;}
+.main{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:230px;background:#C0392B;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;padding-bottom:16px;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2);}
+.sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:2px 8px;border-radius:8px;cursor:pointer;transition:.15s;color:rgba(255,255,255,0.75);font-size:12.5px;font-weight:500;}
+.nav-item:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,0.18);color:#fff;font-weight:700;}
+.nav-num{width:24px;height:24px;background:#F4C542;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#333;flex-shrink:0;}
+.nav-icon{width:24px;height:24px;background:rgba(255,255,255,0.15);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.nav-kuis{background:rgba(244,197,66,0.2);border:1px solid rgba(244,197,66,0.4);margin:8px !important;border-radius:10px !important;padding:10px 14px !important;}
+.nav-kuis:hover{background:rgba(244,197,66,0.35) !important;}
+.nav-kuis.active{background:rgba(244,197,66,0.35) !important;}
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.1);margin:8px 12px;}
+.chat-col{flex:1;display:flex;flex-direction:column;min-width:0;background:#fff;}
+.tab-bar{display:none;background:#fff;border-bottom:2px solid #e8e8e8;flex-shrink:0;overflow-x:auto;}
+.tab-bar::-webkit-scrollbar{height:2px;}
+.tab-bar::-webkit-scrollbar-thumb{background:#ddd;}
+.tab-item{display:flex;align-items:center;gap:6px;padding:9px 14px;font-size:12px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s;flex-shrink:0;}
+.tab-item:hover{color:#C0392B;background:#fef9f9;}
+.tab-item.active{color:#C0392B;border-bottom-color:#C0392B;}
+.tab-num{width:18px;height:18px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#888;}
+.tab-item.active .tab-num{background:#C0392B;color:#fff;}
+.chat-rooms{flex:1;overflow:hidden;position:relative;}
+.chat-room{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .2s;}
+.chat-room.active{opacity:1;pointer-events:all;}
+.chat-header{background:#fff;border-bottom:1px solid #e8e8e8;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.chat-header-left{display:flex;align-items:center;gap:10px;}
+.bot-avatar{width:38px;height:38px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.bot-name{font-size:14px;font-weight:700;}
+.bot-status{font-size:11px;color:#27ae60;display:flex;align-items:center;gap:4px;}
+.dot-online{width:7px;height:7px;background:#27ae60;border-radius:50%;display:inline-block;}
+.topik-badge{background:#fee8e7;color:#C0392B;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+.chat-body{flex:1;overflow-y:auto;padding:14px 16px;background:#f7f5f2;display:flex;flex-direction:column;gap:8px;}
+.chat-body::-webkit-scrollbar{width:4px;}
+.chat-body::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px;}
+.date-divider{text-align:center;font-size:11px;color:#888;background:rgba(0,0,0,0.05);padding:3px 12px;border-radius:20px;align-self:center;margin:4px 0;}
+.bubble-wrap{display:flex;gap:8px;align-items:flex-end;max-width:80%;}
+.bubble-wrap.user{align-self:flex-end;flex-direction:row-reverse;}
+.bubble-wrap.bot{align-self:flex-start;}
+.bub-avatar{width:30px;height:30px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.bub-avatar.user-av{background:#e74c3c;font-size:12px;font-weight:700;color:#fff;}
+.bubble{padding:10px 14px;border-radius:16px;font-size:13.5px;line-height:1.6;max-width:100%;}
+.bubble.bot{background:#fff;color:#1a1a1a;border-bottom-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.07);}
+.bubble.user{background:#C0392B;color:#fff;border-bottom-right-radius:4px;}
+.bubble .ts{font-size:10px;opacity:0.55;margin-top:4px;text-align:right;}
+.typing-dots{display:flex;gap:4px;padding:12px 14px;background:#fff;border-radius:16px;border-bottom-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.07);width:fit-content;}
+.typing-dots span{width:7px;height:7px;background:#bbb;border-radius:50%;animation:bounce 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-6px);}}
+.chat-footer{background:#fff;border-top:1px solid #e8e8e8;padding:10px 14px;flex-shrink:0;}
+.choices-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;min-height:30px;}
+.choice-chip{background:#fee8e7;border:1.5px solid #C0392B;color:#C0392B;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer;transition:.15s;font-family:inherit;white-space:nowrap;}
+.choice-chip:hover{background:#C0392B;color:#fff;}
+.choice-chip.selected{background:#C0392B;color:#fff;}
+.input-row{display:flex;gap:10px;align-items:center;}
+.chat-input-box{flex:1;background:#f5f5f5;border:1.5px solid #e8e8e8;border-radius:24px;padding:10px 16px;font-size:13.5px;font-family:inherit;outline:none;cursor:pointer;color:#888;transition:.2s;user-select:none;caret-color:transparent;}
+.chat-input-box.has-val{color:#1a1a1a;background:#fff;border-color:#C0392B;}
+.btn-send{width:40px;height:40px;background:#ddd;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;}
+.btn-send.active{background:#C0392B;}
+.btn-send:hover.active{background:#a93226;}
+.btn-send svg{width:18px;height:18px;fill:#fff;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:16px;width:480px;max-width:95vw;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:popIn .25s ease;}
+@keyframes popIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-header{background:#C0392B;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.modal-header h3{font-size:15px;font-weight:800;}
+.modal-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.8;transition:.2s;}
+.modal-close:hover{opacity:1;}
+.modal-body{padding:20px;}
+.kuis-select-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+.kuis-select-sub{font-size:12px;color:#888;margin-bottom:12px;}
+.sila-kuis-btn{display:flex;align-items:center;gap:12px;background:#f5f5f5;border:2px solid transparent;border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s;font-family:inherit;text-align:left;width:100%;margin-bottom:8px;}
+.sila-kuis-btn:hover:not(:disabled){border-color:#C0392B;background:#fff8f7;}
+.sila-kuis-btn:disabled{opacity:.45;cursor:not-allowed;}
+.sila-kuis-btn .sk-num{width:32px;height:32px;border-radius:50%;background:#C0392B;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sila-kuis-btn.gabungan .sk-num{background:#F4C542;color:#333;}
+.sila-kuis-btn .sk-info{flex:1;}
+.sila-kuis-btn .sk-name{font-size:13px;font-weight:700;color:#1a1a1a;}
+.sila-kuis-btn .sk-desc{font-size:11px;color:#888;margin-top:2px;}
+.sila-kuis-btn .sk-level{font-size:10px;font-weight:700;color:#C0392B;background:#fee8e7;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+.sila-kuis-btn.gabungan .sk-level{background:#fff3cc;color:#b8860b;}
+.kuis-nomor{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.kuis-soal{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;line-height:1.5;}
+.kuis-opsi{display:flex;flex-direction:column;gap:8px;}
+.opsi-btn{background:#f5f5f5;border:2px solid transparent;border-radius:10px;padding:12px 14px;text-align:left;font-size:13.5px;font-family:inherit;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:10px;width:100%;}
+.opsi-btn:hover:not(:disabled){border-color:#C0392B;background:#fff8f7;}
+.opsi-btn .opsi-huruf{width:24px;height:24px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.opsi-btn.benar{background:#eafbea;border-color:#27ae60;}
+.opsi-btn.benar .opsi-huruf{background:#27ae60;color:#fff;}
+.opsi-btn.salah{background:#fef0f0;border-color:#e74c3c;}
+.opsi-btn.salah .opsi-huruf{background:#e74c3c;color:#fff;}
+.kuis-hasil{margin-top:14px;padding:12px;border-radius:10px;font-size:13px;font-weight:600;display:none;}
+.kuis-hasil.benar{background:#eafbea;color:#1a7a1a;}
+.kuis-hasil.salah{background:#fef0f0;color:#a52020;}
+.level-info-bar{display:flex;align-items:center;justify-content:space-between;background:#f5f5f5;border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:12px;}
+.level-info-bar .li-left{font-weight:700;color:#C0392B;}
+.level-info-bar .li-right{color:#888;}
+.modal-footer{padding:0 20px 20px;display:flex;gap:8px;justify-content:flex-end;}
+.btn-lanjut{background:#C0392B;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;}
+.btn-lanjut:hover{background:#a93226;}
+.btn-lanjut:disabled{background:#ddd;cursor:not-allowed;}
+.btn-back{background:#f5f5f5;color:#555;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s;}
+.btn-back:hover{background:#eee;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px;}
+.topbar-user-avatar{width:32px;height:32px;background:#F4C542;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#333;cursor:pointer;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,0.4);}
+.hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px;line-height:1;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:49;}
+.sidebar-overlay.show{display:block;}
+.selamat-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;display:none;align-items:center;justify-content:center;}
+.selamat-overlay.show{display:flex;}
+.selamat-modal{background:#fff;border-radius:20px;padding:32px 28px;max-width:360px;width:90%;text-align:center;animation:popIn .3s ease;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.selamat-icon{font-size:64px;margin-bottom:12px;}
+.selamat-title{font-size:22px;font-weight:900;color:#C0392B;margin-bottom:8px;}
+.selamat-sub{font-size:14px;color:#555;line-height:1.5;margin-bottom:20px;}
+.selamat-score{font-size:48px;font-weight:900;color:#C0392B;margin-bottom:4px;}
+.selamat-score-label{font-size:13px;color:#888;margin-bottom:20px;}
+.selamat-close-btn{background:#C0392B;color:#fff;border:none;border-radius:10px;padding:12px 32px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;}
+.selamat-close-btn:hover{background:#a93226;}
+.konfirmasi-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;display:none;align-items:center;justify-content:center;}
+.konfirmasi-overlay.show{display:flex;}
+.konfirmasi-modal{background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center;animation:popIn .25s ease;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.konfirmasi-modal h3{font-size:18px;font-weight:800;color:#C0392B;margin-bottom:8px;}
+.konfirmasi-modal p{font-size:13px;color:#555;margin-bottom:20px;line-height:1.5;}
+.konfirmasi-btns{display:flex;gap:10px;}
+.konfirmasi-btns button{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-konfirmasi-ya{background:#C0392B;color:#fff;}
+.btn-konfirmasi-tidak{background:#f0f0f0;color:#555;}
+@media(max-width:768px){
+  html,body{overflow:hidden;}
+  #app{overflow:hidden;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .sidebar{position:fixed;left:-250px;top:0;bottom:0;z-index:50;width:240px;transition:left .25s ease;box-shadow:4px 0 20px rgba(0,0,0,0.3);}
+  .sidebar.open{left:0;}
+  .main{overflow:hidden;}
+  .chat-col{width:100%;}
+  .bubble-wrap{max-width:92%;}
+  .topbar{padding:0 12px;}
+  .topbar-title{font-size:14px;}
+  .modal{width:96vw;max-width:96vw;}
+  .selamat-modal{width:92vw;}
+  .tab-bar{display:flex;}
+}
+@media(max-width:480px){
+  .tab-item{padding:8px 10px;font-size:11px;}
+  .chat-body{padding:10px;}
+  .chat-footer{padding:8px 10px;}
+  .choice-chip{font-size:11px;padding:5px 10px;}
+  .bubble{font-size:13px;}
+}
+@media(min-width:769px){
+  .sidebar{position:relative;left:0 !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+      <div class="topbar-brand">
+        <div class="topbar-logo" style="padding:0;overflow:hidden;background:#fff;">
+          <img src="pancasila.png" style="width:100%;height:100%;object-fit:cover;"/>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-title" style="position:absolute;left:50%;transform:translateX(-50%);">PancasilaBot</div>
+    <div class="topbar-user-avatar" id="topbarUserAvatar" onclick="window.location.href='profil.html'">
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar" id="mainSidebar">
+      <div class="sidebar-section">Tentang Pancasila</div>
+      <div class="nav-item" id="nav-sejarah" onclick="pilihTopik('sejarah',this)"><div class="nav-icon">📜</div><span>Sejarah Pancasila</span></div>
+      <div class="nav-item" id="nav-nilai" onclick="pilihTopik('nilai',this)"><div class="nav-icon">⭐</div><span>Nilai-Nilai Pancasila</span></div>
+      <div class="nav-item" id="nav-lambang" onclick="pilihTopik('lambang',this)"><div class="nav-icon">🦅</div><span>Lambang Garuda</span></div>
+      <div class="sidebar-divider"></div>
+      <div class="nav-item nav-kuis" onclick="bukaKuisMenu()"><div class="nav-icon" style="background:rgba(244,197,66,0.3)">🧠</div><span style="font-weight:700;color:#F4C542">Kuis Interaktif</span></div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">5 Sila Pancasila</div>
+      <div class="nav-item" id="nav-sila1" onclick="pilihTopik('sila1',this)"><div class="nav-num">1</div><span>Ketuhanan Yang Maha Esa</span></div>
+      <div class="nav-item" id="nav-sila2" onclick="pilihTopik('sila2',this)"><div class="nav-num">2</div><span>Kemanusiaan yang Adil dan Beradab</span></div>
+      <div class="nav-item" id="nav-sila3" onclick="pilihTopik('sila3',this)"><div class="nav-num">3</div><span>Persatuan Indonesia</span></div>
+      <div class="nav-item" id="nav-sila4" onclick="pilihTopik('sila4',this)"><div class="nav-num">4</div><span>Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan</span></div>
+      <div class="nav-item" id="nav-sila5" onclick="pilihTopik('sila5',this)"><div class="nav-num">5</div><span>Keadilan Sosial bagi Seluruh Rakyat Indonesia</span></div>
+      <div class="sidebar-divider"></div>
+    </div>
+
+    <div class="chat-col">
+      <div class="tab-bar" id="tabBar"></div>
+     <div class="chat-rooms" id="chatRooms">
+      <div id="welcomeScreen" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f7f5f2;text-align:center;padding:32px;">
+        <img src="pancasila.png" style="width:80px;height:80px;object-fit:cover;border-radius:50%;margin-bottom:16px;opacity:0.7;"/>
+        <div style="font-size:18px;font-weight:800;color:#C0392B;margin-bottom:8px;">Selamat Datang!</div>
+        <div style="font-size:13px;color:#888;line-height:1.6;">Pilih topik dari menu samping<br>untuk mulai belajar Pancasila 🦅</div>
+      </div>
+    </div>
+</div>
+
+<!-- KUIS MODAL -->
+<div class="modal-overlay" id="kuisOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="kuisJudul">🧠 Kuis Pancasila</h3>
+      <button class="modal-close" onclick="tutupKuis()">✕</button>
+    </div>
+    <div class="modal-body" id="kuisBody"></div>
+    <div class="modal-footer" id="kuisFooter">
+      <button class="btn-back" id="btnBack" onclick="kembaliKeMenu()" style="display:none">Menu</button>
+      <button class="btn-lanjut" id="btnLanjut" onclick="soalBerikut()" disabled>Lanjut →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SELAMAT MODAL -->
+<div class="selamat-overlay" id="selamatOverlay">
+  <div class="selamat-modal">
+    <div class="selamat-icon" id="selamatIcon">🏆</div>
+    <div class="selamat-title" id="selamatTitle">Selamat!</div>
+    <div class="selamat-score" id="selamatScore">3/3</div>
+    <div class="selamat-score-label" id="selamatScoreLabel">Nilai: 100% ✅ Lulus</div>
+    <div class="selamat-sub" id="selamatSub">Kamu menjawab semua soal dengan benar!</div>
+    <button class="selamat-close-btn" onclick="tutupSelamat()">Lanjutkan</button>
+  </div>
+</div>
+<script>
+/* ============================================================
+   KONTEN MATERI
+   ============================================================ */
+const TOPIK_LABEL = {
+  sila1:'Sila ke-1', sila2:'Sila ke-2', sila3:'Sila ke-3',
+  sila4:'Sila ke-4', sila5:'Sila ke-5',
+  sejarah:'Sejarah Pancasila', nilai:'Nilai Pancasila', lambang:'Lambang Garuda'
+};
+
+const KONTEN = {
+  sila1: {
+    intro: `<b>Selamat datang di ruang belajar Sila Pertama!</b> 🦅<br><br>
+<b>Sila ke-1: Ketuhanan Yang Maha Esa ⭐</b><br><br>
+Sila pertama menjadi <b>fondasi spiritual</b> bangsa Indonesia — mengakui keberadaan Tuhan sesuai keyakinan masing-masing. Negara Indonesia bukan negara agama (teokrasi), namun juga bukan negara sekuler. Indonesia mengakui Tuhan tanpa menetapkan satu agama resmi.<br><br>
+Pilih topik di bawah untuk belajar lebih lanjut! 👇`,
+    pilihan: ['Makna Sila ke-1','Lambang Bintang Emas','Contoh Pengamalan','Nilai yang Terkandung','Agama Resmi di Indonesia','Toleransi Beragama'],
+    'Makna Sila ke-1': `<b>Makna Sila ke-1 – Ketuhanan Yang Maha Esa</b><br><br>
+🔑 <b>Inti makna:</b> Bangsa Indonesia mengakui adanya Tuhan Yang Maha Esa dan menempatkan nilai-nilai ketuhanan sebagai dasar kehidupan berbangsa dan bernegara.<br><br>
+📌 <b>Poin penting:</b><br>
+• Kebebasan beragama dijamin oleh negara (Pasal 29 UUD 1945)<br>
+• Negara tidak memaksakan satu agama kepada warganya<br>
+• Setiap warga wajib menjalankan agamanya dengan baik<br>
+• Indonesia mengakui 6 agama resmi: Islam, Kristen, Katolik, Hindu, Buddha, Konghucu<br>
+• Penghayat kepercayaan juga diakui setelah Putusan MK 2017`,
+    'Lambang Bintang Emas': `<b>Lambang Sila ke-1: Bintang Emas ⭐</b><br><br>
+Bintang emas pada perisai Garuda Pancasila melambangkan <b>cahaya ketuhanan</b> yang menerangi bangsa Indonesia.<br><br>
+🌟 <b>Makna detail:</b><br>
+• <b>Bintang</b> = sumber cahaya (simbol Tuhan sebagai sumber kehidupan)<br>
+• <b>Warna emas</b> = keagungan dan kemuliaan Tuhan<br>
+• <b>Satu bintang</b> = Ke-ESA-an Tuhan (monoteisme)<br>
+• Bintang berada di tengah perisai = Ketuhanan sebagai pusat kehidupan`,
+    'Contoh Pengamalan': `<b>Contoh Pengamalan Sila ke-1 dalam Kehidupan</b><br><br>
+✅ <b>Di rumah:</b><br>
+• Menjalankan ibadah sesuai agama masing-masing dengan taat<br>
+• Berdoa sebelum dan sesudah makan atau belajar<br>
+• Menghormati orang tua sebagai wujud syukur kepada Tuhan<br><br>
+✅ <b>Di sekolah:</b><br>
+• Mengikuti pelajaran agama dengan sungguh-sungguh<br>
+• Tidak mengejek teman yang berbeda agama<br>
+• Memberi selamat kepada teman yang merayakan hari besar agama<br><br>
+✅ <b>Di masyarakat:</b><br>
+• Tidak mengganggu ibadah orang lain<br>
+• Mendukung pembangunan tempat ibadah agama lain`,
+    'Nilai yang Terkandung': `<b>Nilai-Nilai dalam Sila ke-1</b><br><br>
+🌟 <b>Nilai Religiositas</b><br>
+Keyakinan dan ketakwaan kepada Tuhan Yang Maha Esa sesuai agama masing-masing.<br><br>
+🤝 <b>Nilai Toleransi</b><br>
+Menghormati dan menghargai perbedaan agama dan keyakinan orang lain tanpa memaksakan.<br><br>
+⚖️ <b>Nilai Keadilan Beragama</b><br>
+Perlakuan setara oleh negara kepada semua umat beragama tanpa diskriminasi.<br><br>
+🕊️ <b>Nilai Kerukunan</b><br>
+Hidup berdampingan secara damai antara umat beragama yang berbeda.`,
+    'Agama Resmi di Indonesia': `<b>Agama yang Diakui di Indonesia</b><br><br>
+🇮🇩 Indonesia mengakui <b>6 agama resmi</b>:<br>
+1. ☪️ <b>Islam</b> — agama mayoritas (~87% penduduk)<br>
+2. ✝️ <b>Kristen Protestan</b><br>
+3. ✝️ <b>Kristen Katolik</b><br>
+4. 🕉️ <b>Hindu</b><br>
+5. ☸️ <b>Buddha</b><br>
+6. 🔯 <b>Konghucu</b> (resmi diakui kembali sejak era reformasi)<br><br>
+📌 Setelah <b>Putusan MK No. 97/PUU-XIV/2016</b>, penghayat kepercayaan lokal juga berhak mendapat layanan sipil yang sama.`,
+    'Toleransi Beragama': `<b>Toleransi Beragama dalam Sila ke-1</b><br><br>
+Toleransi bukan berarti mencampurkan ajaran agama, tapi <b>menghormati perbedaan</b>.<br><br>
+✅ <b>Bentuk toleransi yang benar:</b><br>
+• Menghormati perayaan hari besar agama lain<br>
+• Tidak memaksakan keyakinan kepada orang lain<br>
+• Menjaga keamanan tempat ibadah agama lain<br>
+• Mendukung hak orang lain untuk beribadah<br><br>
+❌ <b>Yang bukan toleransi:</b><br>
+• Mengikuti ritual agama lain (sinkretisme)<br>
+• Membiarkan pelecehan terhadap agama manapun`
+  },
+  sila2: {
+    intro: `<b>Selamat datang di ruang belajar Sila Kedua!</b> 🤝<br><br>
+<b>Sila ke-2: Kemanusiaan yang Adil dan Beradab ⛓️</b><br><br>
+Sila ini menegaskan pengakuan atas <b>kesamaan derajat semua manusia</b> tanpa membedakan suku, ras, agama, jenis kelamin, atau status sosial. Inilah landasan perlindungan Hak Asasi Manusia (HAM) di Indonesia.<br><br>
+Pilih topik yang ingin kamu pelajari! 👇`,
+    pilihan: ['Makna Sila ke-2','Lambang Rantai Emas','Contoh Pengamalan','HAM di Indonesia','Nilai Kemanusiaan','Diskriminasi & Sila ke-2'],
+    'Makna Sila ke-2': `<b>Makna Sila ke-2 – Kemanusiaan yang Adil dan Beradab</b><br><br>
+🔑 <b>Inti makna:</b> Mengandung pengakuan atas kesamaan derajat semua manusia. Setiap manusia punya hak dan kewajiban yang sama di hadapan hukum dan Tuhan.<br><br>
+📌 <b>Dua dimensi penting:</b><br>
+• <b>ADIL</b> = Dimensi hukum — setiap orang diperlakukan setara di hadapan hukum, tanpa diskriminasi<br>
+• <b>BERADAB</b> = Dimensi moral/budaya — berperilaku sesuai norma moral universal, menghargai martabat sesama`,
+    'Lambang Rantai Emas': `<b>Lambang Sila ke-2: Rantai Emas ⛓️</b><br><br>
+Rantai pada perisai Garuda terdiri dari dua bentuk mata rantai yang berbeda:<br><br>
+⬛ <b>Mata rantai segi empat</b> = melambangkan <b>laki-laki</b><br>
+⭕ <b>Mata rantai lingkaran</b> = melambangkan <b>perempuan</b><br><br>
+🔗 <b>Makna keseluruhan:</b><br>
+• Saling berkaitan = manusia selalu butuh sesama (makhluk sosial)<br>
+• Tidak terputus = hubungan kemanusiaan yang abadi<br>
+• Kesamaan laki-laki dan perempuan = kesetaraan gender`,
+    'Contoh Pengamalan': `<b>Contoh Pengamalan Sila ke-2</b><br><br>
+✅ <b>Di rumah:</b><br>
+• Menghormati semua anggota keluarga<br>
+• Menolong anggota keluarga yang sakit<br><br>
+✅ <b>Di sekolah:</b><br>
+• Tidak mem-bully teman<br>
+• Berteman dengan siapa saja tanpa memilih-milih<br>
+• Membela teman yang diperlakukan tidak adil<br><br>
+✅ <b>Di masyarakat:</b><br>
+• Menolong korban kecelakaan atau bencana<br>
+• Tidak melakukan diskriminasi terhadap suku/ras tertentu<br>
+• Ikut kegiatan donor darah atau bakti sosial`,
+    'HAM di Indonesia': `<b>HAM (Hak Asasi Manusia) di Indonesia</b><br><br>
+Sila ke-2 menjadi landasan perlindungan HAM di Indonesia.<br><br>
+📋 <b>Regulasi HAM:</b><br>
+• <b>UU No. 39 Tahun 1999</b> tentang Hak Asasi Manusia<br>
+• <b>UU No. 26 Tahun 2000</b> tentang Pengadilan HAM<br>
+• <b>Pasal 28A–28J UUD 1945</b> (hasil amandemen)<br><br>
+📌 <b>Jenis-jenis HAM:</b><br>
+• <b>Hak sipil-politik</b> = bebas berpendapat, memilih, dll.<br>
+• <b>Hak ekonomi-sosial-budaya</b> = hak atas pendidikan, kesehatan, pekerjaan`,
+    'Nilai Kemanusiaan': `<b>Nilai-Nilai dalam Sila ke-2</b><br><br>
+🤝 <b>Nilai Humanisme</b><br>
+Pengakuan harkat dan martabat manusia sebagai makhluk Tuhan yang tertinggi.<br><br>
+⚖️ <b>Nilai Keadilan</b><br>
+Perlakuan yang sama dan adil kepada semua orang tanpa pandang bulu.<br><br>
+🌍 <b>Nilai Universal</b><br>
+Kemanusiaan melampaui batas suku, ras, bangsa, dan agama.<br><br>
+💪 <b>Nilai Solidaritas</b><br>
+Rasa senasib sepenanggungan dan kepedulian terhadap sesama yang menderita.`,
+    'Diskriminasi & Sila ke-2': `<b>Diskriminasi Bertentangan dengan Sila ke-2</b><br><br>
+Diskriminasi adalah perlakuan berbeda yang merugikan seseorang karena identitasnya.<br><br>
+❌ <b>Bentuk diskriminasi yang melanggar sila ke-2:</b><br>
+• Rasisme (membeda-bedakan berdasarkan ras/warna kulit)<br>
+• Sexisme (membeda-bedakan berdasarkan jenis kelamin)<br>
+• Diskriminasi agama<br>
+• Bullying berdasarkan penampilan atau kemampuan<br><br>
+✅ <b>Cara mencegah diskriminasi:</b><br>
+• Kenali dan hargai keberagaman<br>
+• Lawan stereotip dan prasangka<br>
+• Berani bicara saat melihat ketidakadilan`
+  },
+  sila3: {
+    intro: `<b>Selamat datang di ruang belajar Sila Ketiga!</b> 🇮🇩<br><br>
+<b>Sila ke-3: Persatuan Indonesia 🌳</b><br><br>
+Sila ini mengutamakan kepentingan bangsa di atas kepentingan pribadi atau golongan. Indonesia terdiri dari 17.000+ pulau, 300+ suku, 700+ bahasa daerah — namun tetap <b>SATU</b>. Bhinneka Tunggal Ika!<br><br>
+Pilih topik yang ingin kamu pelajari! 👇`,
+    pilihan: ['Makna Sila ke-3','Lambang Pohon Beringin','Contoh Pengamalan','Bhinneka Tunggal Ika','Wawasan Nusantara','Ancaman Persatuan'],
+    'Makna Sila ke-3': `<b>Makna Sila ke-3 – Persatuan Indonesia</b><br><br>
+🔑 <b>Inti makna:</b> Mengutamakan kepentingan bangsa dan negara di atas kepentingan pribadi atau golongan. Menjaga keutuhan NKRI adalah kewajiban seluruh warga negara.<br><br>
+📌 <b>Poin penting:</b><br>
+• Cinta tanah air dan bangsa (nasionalisme)<br>
+• Rela berkorban demi bangsa dan negara<br>
+• Menjaga persatuan dan kesatuan NKRI<br>
+• Memajukan pergaulan demi persatuan bangsa`,
+    'Lambang Pohon Beringin': `<b>Lambang Sila ke-3: Pohon Beringin 🌳</b><br><br>
+🌳 <b>Makna detail:</b><br>
+• <b>Pohon beringin yang besar & rindang</b> = persatuan yang kuat dan kokoh<br>
+• <b>Akar gantung yang banyak</b> = keberagaman suku, budaya, agama yang menjadi kekuatan<br>
+• <b>Rimbunnya daun</b> = perlindungan bagi seluruh rakyat Indonesia<br>
+• <b>Batang yang kokoh</b> = fondasi negara yang kuat`,
+    'Contoh Pengamalan': `<b>Contoh Pengamalan Sila ke-3</b><br><br>
+✅ <b>Di sekolah:</b><br>
+• Berteman dengan semua suku tanpa diskriminasi<br>
+• Menggunakan bahasa Indonesia yang baik dan benar<br>
+• Tidak mengejek daerah atau suku teman<br><br>
+✅ <b>Di masyarakat:</b><br>
+• Ikut serta dalam kegiatan gotong royong<br>
+• Bangga menggunakan produk buatan dalam negeri<br>
+• Mendukung tim olahraga nasional`,
+    'Bhinneka Tunggal Ika': `<b>Bhinneka Tunggal Ika — Semboyan Bangsa</b><br><br>
+📜 <b>Asal-usul:</b><br>
+"Bhinneka Tunggal Ika" berasal dari <b>Kitab Sutasoma</b> karya <b>Mpu Tantular</b> pada abad ke-14 (era Majapahit). Artinya: <b>"Berbeda-beda tetapi tetap satu juga"</b>.<br><br>
+🦅 Semboyan ini tertulis pada <b>pita yang dicengkeram Garuda Pancasila</b>.<br><br>
+📌 <b>Makna filosofis:</b><br>
+• Keberagaman adalah kekuatan, bukan ancaman<br>
+• Perbedaan suku, agama, budaya bisa bersatu dalam identitas nasional`,
+    'Wawasan Nusantara': `<b>Wawasan Nusantara & Sila ke-3</b><br><br>
+Wawasan Nusantara adalah <b>cara pandang bangsa Indonesia</b> tentang diri dan lingkungannya berdasarkan Pancasila dan UUD 1945.<br><br>
+🗺️ <b>Isi Wawasan Nusantara:</b><br>
+• Indonesia sebagai satu kesatuan wilayah (darat, laut, udara)<br>
+• Indonesia sebagai satu kesatuan bangsa<br>
+• Indonesia sebagai satu kesatuan budaya<br>
+• Indonesia sebagai satu kesatuan ideologi<br>
+• Indonesia sebagai satu kesatuan ekonomi`,
+    'Ancaman Persatuan': `<b>Ancaman terhadap Persatuan Bangsa</b><br><br>
+⚠️ <b>Ancaman internal:</b><br>
+• <b>Separatisme</b> — gerakan memisahkan diri dari NKRI<br>
+• <b>Konflik SARA</b> — perselisihan berbasis suku, agama, ras<br>
+• <b>Primordialisme</b> — kesetiaan berlebihan pada suku/daerah sendiri<br>
+• <b>Hoaks dan ujaran kebencian</b> yang memecah belah<br><br>
+✅ <b>Cara menghadapinya:</b><br>
+• Perkuat nasionalisme sejak dini<br>
+• Literasi media untuk cegah hoaks<br>
+• Dialog antarsuku dan antar agama`
+  },
+  sila4: {
+    intro: `<b>Selamat datang di ruang belajar Sila Keempat!</b> 🏛️<br><br>
+<b>Sila ke-4: Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan 🐂</b><br><br>
+Sila ini menegaskan bahwa <b>kedaulatan ada di tangan rakyat</b>, namun dilaksanakan melalui musyawarah mufakat yang penuh kebijaksanaan.<br><br>
+Pilih topik yang ingin kamu pelajari! 👇`,
+    pilihan: ['Makna Sila ke-4','Lambang Kepala Banteng','Contoh Pengamalan','Demokrasi Pancasila','Lembaga Demokrasi RI','Musyawarah vs Voting'],
+    'Makna Sila ke-4': `<b>Makna Sila ke-4</b><br><br>
+🔑 <b>Inti makna:</b> Kedaulatan ada di tangan rakyat dan dilaksanakan melalui musyawarah untuk mufakat dengan penuh kebijaksanaan dan tanggung jawab.<br><br>
+📌 <b>Kata kunci penting:</b><br>
+• <b>KERAKYATAN</b> = kedaulatan berasal dari rakyat<br>
+• <b>HIKMAT KEBIJAKSANAAN</b> = keputusan harus rasional, bermoral, dan bijaksana<br>
+• <b>PERMUSYAWARATAN</b> = proses pengambilan keputusan secara musyawarah<br>
+• <b>PERWAKILAN</b> = rakyat diwakili oleh anggota DPR/MPR yang dipilih`,
+    'Lambang Kepala Banteng': `<b>Lambang Sila ke-4: Kepala Banteng 🐂</b><br><br>
+💪 <b>Makna simbolis:</b><br>
+• <b>Hewan sosial</b> = banteng selalu berkelompok, melambangkan musyawarah dan kebersamaan rakyat<br>
+• <b>Kekuatan rakyat</b> = banteng kuat melambangkan kekuatan yang berasal dari rakyat banyak<br>
+• <b>Keberanian</b> = berani memperjuangkan kebenaran dan keadilan`,
+    'Contoh Pengamalan': `<b>Contoh Pengamalan Sila ke-4</b><br><br>
+✅ <b>Di sekolah:</b><br>
+• Musyawarah memilih ketua kelas secara demokratis<br>
+• Rapat OSIS yang terbuka dan mendengar semua suara<br>
+• Menerima keputusan rapat dengan lapang dada<br><br>
+✅ <b>Di masyarakat:</b><br>
+• Rapat RT/RW yang melibatkan semua warga<br>
+• Mengikuti pemilu dengan jujur dan bertanggung jawab<br>
+• Musyawarah keluarga sebelum mengambil keputusan penting`,
+    'Demokrasi Pancasila': `<b>Demokrasi Pancasila</b><br><br>
+✅ <b>Ciri Demokrasi Pancasila:</b><br>
+• Mengutamakan musyawarah untuk mufakat<br>
+• Dilandasi nilai moral dan agama<br>
+• Mengutamakan kepentingan bersama di atas kepentingan individu<br>
+• Kebebasan berpendapat yang bertanggung jawab<br>
+• Pemimpin tidak berkuasa mutlak`,
+    'Lembaga Demokrasi RI': `<b>Lembaga-Lembaga Demokrasi di Indonesia</b><br><br>
+🏛️ <b>MPR (Majelis Permusyawaratan Rakyat)</b><br>
+Lembaga tertinggi yang berwenang mengubah UUD 1945.<br><br>
+🏛️ <b>DPR (Dewan Perwakilan Rakyat)</b><br>
+Wakil rakyat yang membuat UU dan mengawasi pemerintah.<br><br>
+🏛️ <b>DPD (Dewan Perwakilan Daerah)</b><br>
+Mewakili kepentingan daerah di tingkat nasional.`,
+    'Musyawarah vs Voting': `<b>Musyawarah vs Voting (Pemungutan Suara)</b><br><br>
+🤝 <b>Musyawarah (diutamakan dalam Pancasila):</b><br>
+• Semua pihak didengar<br>
+• Mencari solusi terbaik bersama<br>
+• Hasil: mufakat (kesepakatan bulat)<br><br>
+🗳️ <b>Voting (alternatif jika mufakat tidak tercapai):</b><br>
+• Keputusan berdasarkan suara terbanyak<br>
+• Lebih cepat namun bisa ada yang kecewa<br><br>
+📌 Pancasila mengutamakan musyawarah. Apapun hasilnya harus diterima dengan lapang dada.`
+  },
+  sila5: {
+    intro: `<b>Selamat datang di ruang belajar Sila Kelima!</b> ⚖️<br><br>
+<b>Sila ke-5: Keadilan Sosial bagi Seluruh Rakyat Indonesia 🌾</b><br><br>
+Sila ini mewujudkan cita-cita masyarakat Indonesia yang <b>adil dan makmur secara merata</b>, baik material maupun spiritual. Tidak boleh ada rakyat yang tertinggal!<br><br>
+Pilih topik yang ingin kamu pelajari! 👇`,
+    pilihan: ['Makna Sila ke-5','Lambang Padi dan Kapas','Contoh Pengamalan','Keadilan Sosial','Gotong Royong','Korupsi vs Sila ke-5'],
+    'Makna Sila ke-5': `<b>Makna Sila ke-5 – Keadilan Sosial bagi Seluruh Rakyat Indonesia</b><br><br>
+🔑 <b>Inti makna:</b> Mewujudkan masyarakat Indonesia yang adil dan makmur secara merata, baik material (harta benda) maupun spiritual (kebahagiaan batin).<br><br>
+📌 <b>Poin penting:</b><br>
+• Keadilan distribusi kesejahteraan yang merata<br>
+• Tidak ada penindasan antargolongan<br>
+• Pembangunan merata di seluruh Indonesia<br>
+• Setiap warga punya hak yang sama atas sumber daya negara`,
+    'Lambang Padi dan Kapas': `<b>Lambang Sila ke-5: Padi dan Kapas 🌾</b><br><br>
+🌾 <b>Padi</b> = melambangkan <b>pangan</b> (kebutuhan pokok makanan)<br>
+🌿 <b>Kapas</b> = melambangkan <b>sandang</b> (kebutuhan pokok pakaian)<br><br>
+📌 <b>Makna keseluruhan:</b><br>
+• Cita-cita kemakmuran seluruh rakyat Indonesia<br>
+• Terpenuhinya kebutuhan dasar semua warga<br>
+• Distribusi pangan dan sandang yang merata`,
+    'Contoh Pengamalan': `<b>Contoh Pengamalan Sila ke-5</b><br><br>
+✅ <b>Di sekolah:</b><br>
+• Tidak pilih-pilih teman dalam belajar kelompok<br>
+• Berbagi ilmu dengan teman yang kesulitan<br><br>
+✅ <b>Di masyarakat:</b><br>
+• Membayar pajak dengan jujur dan tepat waktu<br>
+• Tidak melakukan korupsi dalam bentuk apapun<br>
+• Ikut kegiatan gotong royong<br><br>
+✅ <b>Di tingkat negara:</b><br>
+• Mendukung program BPJS Kesehatan<br>
+• Mendukung program beasiswa untuk pelajar kurang mampu`,
+    'Keadilan Sosial': `<b>Keadilan Sosial dalam Kehidupan</b><br><br>
+⚖️ <b>Bentuk nyata keadilan sosial:</b><br><br>
+🏥 <b>Bidang Kesehatan:</b><br>
+• BPJS Kesehatan — jaminan kesehatan seluruh rakyat<br>
+• Puskesmas di seluruh daerah<br><br>
+📚 <b>Bidang Pendidikan:</b><br>
+• Program Indonesia Pintar (PIP)<br>
+• Wajib belajar 12 tahun<br><br>
+💼 <b>Bidang Ketenagakerjaan:</b><br>
+• Upah minimum regional yang adil<br>
+• BPJS Ketenagakerjaan`,
+    'Gotong Royong': `<b>Gotong Royong — Wujud Nyata Sila ke-5</b><br><br>
+Gotong royong adalah bekerja bersama-sama untuk mencapai tujuan bersama. Ini adalah nilai asli budaya Indonesia!<br><br>
+🤝 <b>Bentuk gotong royong:</b><br>
+• <b>Kerja bakti</b> — membersihkan lingkungan bersama<br>
+• <b>Arisan</b> — sistem tabungan bersama komunitas<br>
+• <b>Sumbangan sosial</b> — membantu warga yang kesulitan<br>
+• <b>Tanggap bencana</b> — saling membantu saat musibah<br>
+• <b>Koperasi</b> — usaha bersama yang menguntungkan semua`,
+    'Korupsi vs Sila ke-5': `<b>Korupsi: Pelanggaran Terbesar Sila ke-5</b><br><br>
+Korupsi adalah menggunakan kekuasaan untuk memperkaya diri sendiri dengan merampas hak publik.<br><br>
+❌ <b>Mengapa korupsi melanggar sila ke-5:</b><br>
+• Merampas hak rakyat atas anggaran negara<br>
+• Menghalangi pembangunan yang merata<br>
+• Memperlebar kesenjangan kaya-miskin<br><br>
+✅ <b>Cara memerangi korupsi:</b><br>
+• Mulai dari diri sendiri (jujur, tidak titip absen)<br>
+• Laporkan ke KPK jika menemukan korupsi`
+  },
+  sejarah: {
+    intro: `<b>Selamat datang di ruang belajar Sejarah Pancasila!</b> 📜<br><br>
+Pancasila tidak lahir begitu saja — ada perjuangan panjang para pendiri bangsa di baliknya. Mari kita telusuri perjalanan lahirnya Pancasila dari tahun 1945!<br><br>
+🗓️ <b>Garis waktu singkat:</b><br>
+• 29 April 1945 — BPUPKI dibentuk<br>
+• 1 Juni 1945 — Soekarno berpidato mengusulkan Pancasila<br>
+• 22 Juni 1945 — Piagam Jakarta dirumuskan<br>
+• 18 Agustus 1945 — Pancasila ditetapkan resmi<br><br>
+Pilih topik untuk belajar lebih detail! 👇`,
+    pilihan: ['BPUPKI: Latar Belakang','Sidang BPUPKI Pertama','Pidato Soekarno 1 Juni','Piagam Jakarta','PPKI dan Penetapan','Rumusan Final Pancasila'],
+    'BPUPKI: Latar Belakang': `<b>BPUPKI — Latar Belakang Pembentukan</b><br><br>
+🏛️ <b>BPUPKI</b> = Badan Penyelidik Usaha-Usaha Persiapan Kemerdekaan Indonesia<br><br>
+📅 Dibentuk oleh Jepang pada <b>29 April 1945</b>, bertepatan dengan ulang tahun Kaisar Hirohito.<br><br>
+👤 <b>Ketua:</b> Dr. K.R.T. Radjiman Wedyodiningrat<br>
+👥 <b>Anggota:</b> 67 orang (60 Indonesia + 7 Jepang)<br><br>
+📌 <b>Latar belakang:</b><br>
+Jepang mulai kalah dalam Perang Asia Pasifik. Untuk mendapat dukungan Indonesia, Jepang menjanjikan kemerdekaan dan membentuk BPUPKI.`,
+    'Sidang BPUPKI Pertama': `<b>Sidang Pertama BPUPKI (29 Mei – 1 Juni 1945)</b><br><br>
+📋 Sidang pertama membahas: <b>Dasar Negara Indonesia Merdeka</b><br><br>
+👤 <b>Mr. Muhammad Yamin</b> (29 Mei 1945)<br>
+Mengusulkan 5 asas: peri kebangsaan, peri kemanusiaan, peri ketuhanan, peri kerakyatan, kesejahteraan rakyat.<br><br>
+👤 <b>Prof. Dr. Soepomo</b> (31 Mei 1945)<br>
+Mengusulkan konsep negara integralistik.<br><br>
+👤 <b>Ir. Soekarno</b> (1 Juni 1945)<br>
+Mengusulkan nama <b>"Pancasila"</b> — lima dasar negara.`,
+    'Pidato Soekarno 1 Juni': `<b>Pidato Bersejarah Soekarno — 1 Juni 1945</b><br><br>
+🎙️ Dalam sidang BPUPKI, Ir. Soekarno berpidato mengusulkan dasar negara yang ia namakan <b>PANCASILA</b>.<br><br>
+📜 <b>Lima sila yang diusulkan Soekarno:</b><br>
+1. Kebangsaan Indonesia (Nasionalisme)<br>
+2. Internasionalisme atau Perikemanusiaan<br>
+3. Mufakat atau Demokrasi<br>
+4. Kesejahteraan Sosial<br>
+5. Ketuhanan yang Berkebudayaan<br><br>
+📌 <b>Nama "Pancasila"</b> berasal dari bahasa Sansekerta: <b>Panca</b> = lima, <b>Sila</b> = dasar/asas<br><br>
+🗓️ <b>1 Juni</b> diperingati sebagai <b>Hari Lahir Pancasila</b>.`,
+    'Piagam Jakarta': `<b>Piagam Jakarta — 22 Juni 1945</b><br><br>
+📄 <b>Panitia Sembilan</b> diketuai Soekarno merumuskan Piagam Jakarta sebagai rancangan pembukaan UUD.<br><br>
+📜 <b>Rumusan sila ke-1 dalam Piagam Jakarta:</b><br>
+<i>"Ketuhanan dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya"</i><br><br>
+⚠️ <b>Kontroversi:</b><br>
+Kalimat "syariat Islam" ditolak oleh tokoh-tokoh dari Indonesia bagian timur yang non-Muslim.<br><br>
+📌 Akhirnya diubah menjadi <b>"Ketuhanan Yang Maha Esa"</b> pada 18 Agustus 1945 demi menjaga persatuan.`,
+    'PPKI dan Penetapan': `<b>PPKI dan Penetapan Pancasila — 18 Agustus 1945</b><br><br>
+🏛️ <b>PPKI</b> = Panitia Persiapan Kemerdekaan Indonesia<br><br>
+📅 Sidang pertama PPKI: <b>18 Agustus 1945</b> — sehari setelah proklamasi kemerdekaan.<br><br>
+✅ <b>Keputusan penting sidang 18 Agustus 1945:</b><br>
+1. Mengesahkan dan menetapkan UUD 1945<br>
+2. Memilih Soekarno sebagai Presiden dan Hatta sebagai Wakil Presiden<br>
+3. Mengubah sila ke-1 menjadi <b>"Ketuhanan Yang Maha Esa"</b><br>
+4. Menetapkan Pancasila sebagai dasar negara RI secara resmi`,
+    'Rumusan Final Pancasila': `<b>Rumusan Final Pancasila (18 Agustus 1945)</b><br><br>
+⭐ <b>1. Ketuhanan Yang Maha Esa</b><br>
+⛓️ <b>2. Kemanusiaan yang Adil dan Beradab</b><br>
+🌳 <b>3. Persatuan Indonesia</b><br>
+🐂 <b>4. Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan</b><br>
+🌾 <b>5. Keadilan Sosial bagi Seluruh Rakyat Indonesia</b><br><br>
+📌 <b>Sifat Pancasila:</b><br>
+• <b>Hierarkis-piramidal</b> = Sila ke-1 mendasari sila lain<br>
+• <b>Organis</b> = tidak bisa dipisahkan satu sama lain<br>
+• <b>Ideologi terbuka</b> = nilai dasar tetap, penjabaran bisa berkembang`
+  },
+  nilai: {
+    intro: `<b>Selamat datang di ruang belajar Nilai-Nilai Pancasila!</b> ⭐<br><br>
+Setiap sila Pancasila mengandung <b>nilai-nilai luhur</b> yang menjadi pedoman hidup bangsa Indonesia.<br><br>
+🌟 Ada <b>5 nilai utama</b> yang terkandung dalam Pancasila:<br>
+Religius · Humanis · Nasionalis · Demokratis · Sosial<br><br>
+Pilih nilai yang ingin kamu pelajari! 👇`,
+    pilihan: ['Nilai Religius (Sila 1)','Nilai Humanis (Sila 2)','Nilai Nasionalis (Sila 3)','Nilai Demokratis (Sila 4)','Nilai Sosial (Sila 5)','Hubungan Antar Nilai'],
+    'Nilai Religius (Sila 1)': `<b>Nilai Religius — Sila ke-1</b><br><br>
+🙏 Keyakinan, ketakwaan, dan hubungan manusia dengan Tuhan sebagai sumber segala kehidupan.<br><br>
+📌 <b>Bentuk nilai religius:</b><br>
+• Beribadah kepada Tuhan sesuai keyakinan<br>
+• Bersyukur atas segala nikmat<br>
+• Toleransi terhadap perbedaan agama<br>
+• Menjaga kerukunan umat beragama`,
+    'Nilai Humanis (Sila 2)': `<b>Nilai Humanis — Sila ke-2</b><br><br>
+🤝 Pengakuan harkat dan martabat manusia sebagai makhluk Tuhan yang paling sempurna.<br><br>
+📌 <b>Bentuk nilai humanis:</b><br>
+• Menghormati hak asasi setiap manusia<br>
+• Berlaku adil tanpa diskriminasi<br>
+• Tidak merendahkan atau melecehkan orang lain<br>
+• Menolong sesama yang membutuhkan`,
+    'Nilai Nasionalis (Sila 3)': `<b>Nilai Nasionalis — Sila ke-3</b><br><br>
+🇮🇩 Cinta tanah air, menghargai keberagaman sebagai kekuatan, dan mengutamakan kepentingan bangsa.<br><br>
+📌 <b>Bentuk nilai nasionalis:</b><br>
+• Bangga menjadi warga negara Indonesia<br>
+• Menggunakan produk dalam negeri<br>
+• Menghargai budaya dan kesenian daerah<br>
+• Menjaga keutuhan NKRI`,
+    'Nilai Demokratis (Sila 4)': `<b>Nilai Demokratis — Sila ke-4</b><br><br>
+🗳️ Pengakuan bahwa kedaulatan ada di tangan rakyat, dan keputusan diambil melalui musyawarah yang bijaksana.<br><br>
+📌 <b>Bentuk nilai demokratis:</b><br>
+• Menghormati pendapat orang lain<br>
+• Berani berpendapat secara bertanggung jawab<br>
+• Menerima keputusan bersama dengan lapang dada<br>
+• Berpartisipasi aktif dalam kehidupan demokrasi`,
+    'Nilai Sosial (Sila 5)': `<b>Nilai Sosial — Sila ke-5</b><br><br>
+⚖️ Cita-cita mewujudkan keadilan dan kemakmuran bagi seluruh rakyat Indonesia secara merata.<br><br>
+📌 <b>Bentuk nilai sosial:</b><br>
+• Suka memberi pertolongan kepada yang membutuhkan<br>
+• Tidak bergaya hidup mewah secara berlebihan<br>
+• Suka bekerja keras<br>
+• Tidak melakukan korupsi`,
+    'Hubungan Antar Nilai': `<b>Hubungan Antar Nilai dalam Pancasila</b><br><br>
+🔗 <b>Hubungan hierarkis-organis:</b><br>
+• Sila ke-1 (Religius) → <b>menjadi sumber</b> semua sila lainnya<br>
+• Sila ke-2 (Humanis) → manusia yang bertuhan harus menghargai sesama<br>
+• Sila ke-3 (Nasionalis) → manusia yang beradab menjaga persatuan<br>
+• Sila ke-4 (Demokratis) → persatuan dikelola melalui demokrasi yang bijak<br>
+• Sila ke-5 (Sosial) → demokrasi bertujuan mewujudkan keadilan sosial<br><br>
+📌 Melanggar satu sila berarti merusak keseluruhan nilai Pancasila!`
+  },
+  lambang: {
+    intro: `<b>Selamat datang di ruang belajar Lambang Garuda Pancasila!</b> 🦅<br><br>
+Garuda Pancasila adalah <b>lambang negara Indonesia</b> yang penuh makna. Setiap detail — dari jumlah bulu hingga warna — memiliki arti yang mendalam.<br><br>
+Garuda Pancasila dirancang oleh <b>Sultan Hamid II</b> dari Pontianak dan disempurnakan oleh Presiden Soekarno. Resmi digunakan sejak <b>11 Februari 1950</b>.<br><br>
+Pilih topik untuk belajar! 👇`,
+    pilihan: ['Burung Garuda','Makna Bulu Garuda','Perisai Garuda','Lima Lambang Sila','Bhinneka Tunggal Ika','Warna-Warna Garuda'],
+    'Burung Garuda': `<b>Burung Garuda — Lambang Negara Indonesia</b><br><br>
+🦅 <b>Mengapa Garuda?</b><br>
+Garuda adalah makhluk mitologis dari tradisi Hindu-Buddha yang melambangkan kekuatan dan kejayaan.<br><br>
+📌 <b>Ciri-ciri Garuda Pancasila:</b><br>
+• Kepala menoleh ke kanan (simbol kebenaran)<br>
+• Sayap terkembang lebar (siap terbang tinggi)<br>
+• Cakar mencengkeram pita bertuliskan semboyan<br>
+• Perisai di dada berisi 5 lambang sila`,
+    'Makna Bulu Garuda': `<b>Makna Jumlah Bulu Garuda Pancasila</b><br><br>
+Jumlah bulu melambangkan tanggal proklamasi: <b>17 Agustus 1945</b><br><br>
+🔢 <b>Rincian bulu:</b><br>
+• 🪶 <b>17 bulu sayap kanan</b> = tanggal 17<br>
+• 🪶 <b>17 bulu sayap kiri</b> = tanggal 17<br>
+• 🪶 <b>8 bulu ekor</b> = bulan Agustus (bulan ke-8)<br>
+• 🪶 <b>45 bulu leher</b> = tahun 1945<br><br>
+📅 <b>17 bulu sayap | 8 bulu ekor | 45 bulu leher = 17-8-1945</b>`,
+    'Perisai Garuda': `<b>Perisai pada Dada Garuda</b><br><br>
+Perisai berbentuk jantung yang digantungkan di leher Garuda dibagi menjadi <b>5 bidang</b>.<br><br>
+🛡️ <b>Pembagian perisai:</b><br>
+• <b>Bagian tengah</b> = Bintang Emas (Sila ke-1)<br>
+• <b>Kanan atas</b> = Rantai (Sila ke-2)<br>
+• <b>Kiri atas</b> = Pohon Beringin (Sila ke-3)<br>
+• <b>Kanan bawah</b> = Kepala Banteng (Sila ke-4)<br>
+• <b>Kiri bawah</b> = Padi dan Kapas (Sila ke-5)<br><br>
+🎨 <b>Garis hitam tebal</b> di tengah = melambangkan garis khatulistiwa`,
+    'Lima Lambang Sila': `<b>Lima Lambang dalam Perisai Garuda</b><br><br>
+⭐ <b>Bintang Emas</b> (latar hitam) = Sila ke-1: Ketuhanan Yang Maha Esa<br><br>
+⛓️ <b>Rantai Emas</b> (latar merah) = Sila ke-2: Kemanusiaan yang Adil dan Beradab<br><br>
+🌳 <b>Pohon Beringin</b> (latar putih) = Sila ke-3: Persatuan Indonesia<br><br>
+🐂 <b>Kepala Banteng</b> (latar merah) = Sila ke-4: Kerakyatan<br><br>
+🌾 <b>Padi dan Kapas</b> (latar putih) = Sila ke-5: Keadilan Sosial`,
+    'Bhinneka Tunggal Ika': `<b>Pita Bhinneka Tunggal Ika</b><br><br>
+Di bawah Garuda, ada pita putih bertuliskan:<br><br>
+📜 <b>"BHINNEKA TUNGGAL IKA"</b><br>
+Artinya: <b>"Berbeda-beda tetapi tetap satu juga"</b><br><br>
+📚 <b>Asal-usul:</b><br>
+Berasal dari <b>Kitab Sutasoma</b> karya <b>Mpu Tantular</b> pada abad ke-14, masa Kerajaan Majapahit.<br><br>
+🦅 Pita dicengkeram kedua cakar Garuda = tekad kuat mempertahankan persatuan dalam keberagaman.`,
+    'Warna-Warna Garuda': `<b>Makna Warna dalam Garuda Pancasila</b><br><br>
+🟡 <b>Emas/Kuning</b> = keagungan, kemuliaan, kejayaan<br><br>
+🔴 <b>Merah</b> = keberanian, semangat, pengorbanan<br><br>
+⚪ <b>Putih</b> = kesucian, kejujuran, kemurnian<br><br>
+⚫ <b>Hitam</b> = keabadian, keteguhan, kekuatan<br><br>
+🟢 <b>Hijau</b> = kemakmuran, kesuburan`
+  }
+};
+
+/* ============================================================
+   BANK SOAL — 5 LEVEL per SILA
+   ============================================================ */
+const SOAL_SILA = {
+  sila1:[
+    [{soal:"Sila ke-1 Pancasila berbunyi...",opsi:["Persatuan Indonesia","Ketuhanan Yang Maha Esa","Keadilan Sosial","Kemanusiaan yang Adil"],jwb:1,ket:"Sila ke-1 berbunyi Ketuhanan Yang Maha Esa."},
+     {soal:"Lambang sila ke-1 adalah...",opsi:["Rantai","Pohon Beringin","Bintang Emas","Kepala Banteng"],jwb:2,ket:"Bintang Emas melambangkan cahaya ketuhanan pada sila ke-1."},
+     {soal:"Bintang Emas pada perisai Garuda berlatar warna...",opsi:["Merah","Putih","Hijau","Hitam"],jwb:3,ket:"Bintang Emas berlatar hitam yang melambangkan keabadian Tuhan."}],
+    [{soal:"Nilai utama yang terkandung dalam sila ke-1 adalah...",opsi:["Nasionalisme","Religiositas","Demokrasi","Keadilan"],jwb:1,ket:"Sila ke-1 mengandung nilai religiositas — hubungan manusia dengan Tuhan."},
+     {soal:"Kebebasan beragama di Indonesia dijamin dalam...",opsi:["UU No. 39 Tahun 1999","Pasal 29 UUD 1945","Pasal 27 UUD 1945","Tap MPR 1966"],jwb:1,ket:"Pasal 29 UUD 1945 menjamin kebebasan beragama di Indonesia."},
+     {soal:"Berikut yang BUKAN pengamalan sila ke-1 adalah...",opsi:["Beribadah dengan taat","Menghormati pemeluk agama lain","Memaksakan agama kepada orang lain","Berdoa sebelum belajar"],jwb:2,ket:"Memaksakan agama kepada orang lain bertentangan dengan sila ke-1."}],
+    [{soal:"Indonesia mengakui berapa agama resmi?",opsi:["4 agama","5 agama","6 agama","7 agama"],jwb:2,ket:"Indonesia mengakui 6 agama resmi: Islam, Kristen, Katolik, Hindu, Buddha, Konghucu."},
+     {soal:"Toleransi beragama yang sesuai sila ke-1 tercermin dalam sikap...",opsi:["Mengikuti ritual semua agama","Menghormati perayaan agama lain tanpa ikut-ikutan","Menganggap semua agama sama saja","Melarang agama minoritas berpraktik"],jwb:1,ket:"Menghormati tanpa ikut serta dalam ritual agama lain adalah sikap toleransi yang tepat."},
+     {soal:"Sila ke-1 menjadi sumber dari sila-sila lainnya. Ini disebut hubungan...",opsi:["Paralel","Hierarkis-Piramidal","Acak","Terpisah"],jwb:1,ket:"Sila ke-1 menjadi puncak hierarki Pancasila yang mendasari semua sila lain."}],
+    [{soal:"Penghayat kepercayaan lokal di Indonesia mendapat pengakuan sipil setelah...",opsi:["UU No. 39/1999","Putusan MK 2017","Amandemen UUD 1945","Reformasi 1998"],jwb:1,ket:"Putusan MK No. 97/PUU-XIV/2016 (2017) mengakui penghayat kepercayaan mendapat layanan sipil yang sama."},
+     {soal:"Perbedaan antara negara teokrasi dan negara berdasarkan Pancasila adalah...",opsi:["Keduanya sama saja","Pancasila menjadikan satu agama sebagai dasar hukum formal","Pancasila mengakui ketuhanan tanpa menjadikan satu agama sebagai dasar hukum formal","Pancasila melarang agama di ruang publik"],jwb:2,ket:"Indonesia berdasarkan Ketuhanan Yang Maha Esa, bukan hukum satu agama tertentu."},
+     {soal:"Moderasi beragama yang diajarkan sila ke-1 bertujuan untuk...",opsi:["Mencampurkan semua ajaran agama","Mencegah radikalisme dan menjaga harmoni","Membuktikan satu agama paling benar","Mengurangi jumlah agama di Indonesia"],jwb:1,ket:"Moderasi beragama mendorong sikap tengah-tengah untuk mencegah ekstremisme."}],
+    [{soal:"'Ketuhanan Yang Maha Esa' bermakna inklusif karena...",opsi:["Hanya berlaku untuk umat Islam","Mengakui Tuhan untuk berbagai agama yang berbeda","Negara wajib mendirikan satu agama resmi","Ateis diakui dalam Pancasila"],jwb:1,ket:"'Yang Maha Esa' berarti satu Tuhan, namun pengakuannya bersifat inklusif untuk berbagai agama."},
+     {soal:"Konflik antaragama yang terjadi di masyarakat melanggar sila ke...",opsi:["Sila ke-3 saja","Sila ke-1 dan ke-3 sekaligus","Sila ke-2 saja","Sila ke-5 saja"],jwb:1,ket:"Konflik agama melanggar sila ke-1 (toleransi beragama) dan ke-3 (persatuan)."},
+     {soal:"Pernyataan 'Bangsa Indonesia bertuhan, bukan Indonesia beragama (satu agama resmi)' mengandung makna...",opsi:["Agama tidak penting bagi bangsa Indonesia","Semua agama diakui keberadaannya dan negara tidak berbasis satu agama","Indonesia adalah negara ateis","Negara boleh mengatur isi ajaran agama"],jwb:1,ket:"Pernyataan ini menegaskan inklusivitas ketuhanan dalam Pancasila."}]
+  ],
+  sila2:[
+    [{soal:"Lambang sila ke-2 adalah...",opsi:["Bintang","Rantai","Pohon Beringin","Padi dan Kapas"],jwb:1,ket:"Rantai melambangkan hubungan antarmanusia yang saling berkaitan."},
+     {soal:"Sila ke-2 berbunyi...",opsi:["Keadilan Sosial bagi Seluruh Rakyat","Kemanusiaan yang Adil dan Beradab","Ketuhanan Yang Maha Esa","Persatuan Indonesia"],jwb:1,ket:"Kemanusiaan yang Adil dan Beradab adalah bunyi sila ke-2."},
+     {soal:"Rantai pada lambang sila ke-2 terdiri dari bentuk...",opsi:["Segitiga dan lingkaran","Segi empat dan lingkaran","Bintang dan lingkaran","Persegi dan segitiga"],jwb:1,ket:"Segi empat (laki-laki) dan lingkaran (perempuan) saling berkaitan melambangkan persatuan manusia."}],
+    [{soal:"HAM (Hak Asasi Manusia) di Indonesia diatur dalam...",opsi:["UU No. 39 Tahun 1999","UU No. 12 Tahun 2005","UU No. 40 Tahun 2008","UU No. 20 Tahun 2003"],jwb:0,ket:"UU No. 39 Tahun 1999 tentang Hak Asasi Manusia berkaitan erat dengan sila ke-2."},
+     {soal:"Berikut yang BUKAN pengamalan sila ke-2 adalah...",opsi:["Menghormati hak orang lain","Merendahkan suku tertentu","Bersikap sopan kepada semua","Membela yang lemah"],jwb:1,ket:"Merendahkan suku tertentu adalah diskriminasi yang melanggar sila ke-2."},
+     {soal:"Dua dimensi 'Adil dan Beradab' dalam sila ke-2 adalah...",opsi:["Ekonomi dan budaya","Hak dan kewajiban","Keadilan (dimensi hukum) dan keberadaban (dimensi moral)","Lahir dan batin"],jwb:2,ket:"'Adil' = dimensi hukum/kesetaraan, 'Beradab' = dimensi moral dan budaya."}],
+    [{soal:"UU yang mengatur Pengadilan HAM di Indonesia adalah...",opsi:["UU No. 39/1999","UU No. 26 Tahun 2000","UU No. 40/2008","UU No. 12/2005"],jwb:1,ket:"UU No. 26 Tahun 2000 tentang Pengadilan HAM untuk mengadili pelanggaran HAM berat."},
+     {soal:"Pasal UUD 1945 yang mengatur HAM adalah...",opsi:["Pasal 27","Pasal 28A-28J","Pasal 29","Pasal 30"],jwb:1,ket:"Pasal 28A hingga 28J UUD 1945 hasil amandemen mengatur tentang HAM."},
+     {soal:"Sila ke-2 berkaitan erat dengan nilai universal karena...",opsi:["Hanya berlaku di Indonesia","Melindungi hak manusia tanpa batas suku, bangsa, atau agama","Hanya berlaku untuk WNI","Terbatas pada hak politik saja"],jwb:1,ket:"Nilai humanisme bersifat universal — berlaku untuk semua manusia di dunia."}],
+    [{soal:"Hak sipil-politik berbeda dengan hak ekonomi-sosial-budaya karena...",opsi:["Keduanya identik","Hak sipil-politik: negara tidak boleh melanggar; hak ekosob: negara wajib memenuhi","Hak ekosob lebih penting","Hak sipil-politik hanya di negara demokratis"],jwb:1,ket:"Perbedaan karakter kedua jenis HAM ini penting dalam hukum HAM internasional."},
+     {soal:"Bullying di sekolah termasuk pelanggaran sila ke-2 karena...",opsi:["Dilarang oleh tata tertib sekolah","Mengingkari persamaan harkat dan martabat manusia","Membuat korban tidak nyaman","Mengganggu ketertiban umum"],jwb:1,ket:"Bullying mengingkari prinsip kesamaan derajat manusia yang menjadi inti sila ke-2."},
+     {soal:"Hubungan antara sila ke-1 dan sila ke-2 yang paling tepat adalah...",opsi:["Tidak saling berhubungan","Ketuhanan menjadi sumber nilai kemanusiaan; manusia yang bertuhan harus menjunjung kemanusiaan","Sila ke-2 lebih penting dari sila ke-1","Keduanya sejajar tanpa keterkaitan"],jwb:1,ket:"Dalam hierarki Pancasila, nilai ketuhanan menjadi sumber nilai-nilai kemanusiaan."}],
+    [{soal:"Diskriminasi berdasarkan ras di tempat kerja melanggar sila ke-2 karena...",opsi:["Semua pekerjaan milik negara","Mengingkari persamaan harkat dan martabat manusia","Pekerja asing tidak boleh bekerja di Indonesia","Ras tidak relevan dengan kompetensi kerja"],jwb:1,ket:"Diskriminasi ras mengingkari prinsip kesamaan derajat manusia yang menjadi inti sila ke-2."},
+     {soal:"Konsep 'keberadaban' dalam sila ke-2 paling tepat didefinisikan sebagai...",opsi:["Tingkat kemajuan teknologi","Kapasitas manusia untuk hidup sesuai norma moral universal dan menghargai martabat sesama","Kepatuhan pada adat istiadat lokal","Kemampuan berkomunikasi dengan sopan"],jwb:1,ket:"Beradab merujuk pada kapasitas moral manusia untuk menghargai sesama sesuai nilai universal."},
+     {soal:"Praktik diskriminasi sistemik terhadap kelompok minoritas menunjukkan...",opsi:["Wajar terjadi di masyarakat pluralis","Gap antara ideal sila ke-2 dan realita yang masih harus diperjuangkan","Pancasila tidak relevan lagi","Hukum Indonesia sudah cukup melindungi"],jwb:1,ket:"Diskriminasi sistemik menunjukkan masih ada jarak antara nilai sila ke-2 dan penerapannya."}]
+  ],
+  sila3:[
+    [{soal:"Lambang sila ke-3 adalah...",opsi:["Bintang","Rantai","Pohon Beringin","Padi Kapas"],jwb:2,ket:"Pohon Beringin melambangkan persatuan yang kokoh dan tempat berlindung."},
+     {soal:"Sila ke-3 berbunyi...",opsi:["Persatuan Indonesia","Ketuhanan Yang Maha Esa","Keadilan Sosial","Kemanusiaan yang Adil"],jwb:0,ket:"Persatuan Indonesia adalah bunyi sila ke-3 Pancasila."},
+     {soal:"Arti 'Bhinneka Tunggal Ika' adalah...",opsi:["Bersatu kita teguh","Berbeda-beda tetapi tetap satu juga","Satu nusa satu bangsa","Tanah air satu Indonesia"],jwb:1,ket:"Bhinneka Tunggal Ika = Berbeda-beda tetapi tetap satu juga."}],
+    [{soal:"Semboyan 'Bhinneka Tunggal Ika' berasal dari kitab...",opsi:["Negarakertagama","Sutasoma","Pararaton","Arjunawiwaha"],jwb:1,ket:"Bhinneka Tunggal Ika dikutip dari Kitab Sutasoma karya Mpu Tantular abad ke-14."},
+     {soal:"Pohon Beringin pada lambang sila ke-3 melambangkan...",opsi:["Kesuburan alam Indonesia","Tempat berlindung yang kuat bagi seluruh rakyat","Kekayaan hutan Indonesia","Jiwa petani Indonesia"],jwb:1,ket:"Beringin yang rindang melambangkan perlindungan dan persatuan yang kuat."},
+     {soal:"Akar gantung pada lambang pohon beringin melambangkan...",opsi:["Kelemahan akar","Keberagaman yang menjadi kekuatan bangsa","Ketergantungan pada alam","Kepasrahan rakyat"],jwb:1,ket:"Akar gantung yang banyak melambangkan keberagaman suku, budaya, agama sebagai kekuatan."}],
+    [{soal:"Kitab Sutasoma karya Mpu Tantular berasal dari era kerajaan...",opsi:["Sriwijaya","Majapahit","Mataram","Singasari"],jwb:1,ket:"Kitab Sutasoma ditulis Mpu Tantular pada abad ke-14 di era Kerajaan Majapahit."},
+     {soal:"Gerakan separatisme bertentangan dengan sila ke-3 karena...",opsi:["Memecah belah persatuan bangsa","Melanggar hak beragama","Merugikan ekonomi negara","Tidak demokratis"],jwb:0,ket:"Separatisme mengancam integritas territorial dan persatuan bangsa yang dijunjung sila ke-3."},
+     {soal:"Wawasan Nusantara menegaskan Indonesia sebagai satu kesatuan dalam dimensi...",opsi:["Wilayah saja","Wilayah dan bangsa saja","Wilayah, bangsa, budaya, ideologi, dan ekonomi","Hukum dan politik saja"],jwb:2,ket:"Wawasan Nusantara menjamin persatuan dalam semua dimensi kehidupan berbangsa."}],
+    [{soal:"Primordialisme yang berlebihan dapat mengancam sila ke-3 karena...",opsi:["Memperkuat identitas daerah","Kesetiaan pada suku/daerah melebihi identitas nasional yang memecah persatuan","Menjaga budaya lokal","Mendorong kemajuan daerah"],jwb:1,ket:"Primordialisme berlebihan menempatkan kepentingan kelompok di atas kepentingan bangsa."},
+     {soal:"Nasionalisme Pancasila berbeda dari nasionalisme sempit karena...",opsi:["Menolak kerja sama internasional","Mengagungkan satu suku bangsa","Mencintai bangsa sendiri tanpa merendahkan bangsa lain","Menutup diri dari budaya luar"],jwb:2,ket:"Nasionalisme Pancasila bersifat inklusif dan tidak bersifat xenofobia."},
+     {soal:"Otonomi daerah sebenarnya memperkuat sila ke-3 karena...",opsi:["Memberi daerah hak memisahkan diri","Memberi daerah kewenangan mengelola potensi lokal demi memperkuat persatuan","Menghapus perbedaan antar daerah","Melemahkan pemerintah pusat"],jwb:1,ket:"Otonomi daerah memperkuat persatuan justru dengan memberi ruang daerah berkembang."}],
+    [{soal:"Disinformasi dan polarisasi digital mengancam sila ke-3 karena...",opsi:["Terlalu banyak informasi","Memecah-belah persatuan melalui hoaks dan ujaran kebencian","Kurangnya literasi digital","E-commerce merusak UMKM"],jwb:1,ket:"Disinformasi dan polarisasi digital terbukti memecah-belah persatuan."},
+     {soal:"Konsep 'unity in diversity' (Bhinneka Tunggal Ika) secara sosiologis menunjukkan...",opsi:["Keberagaman harus dihilangkan demi persatuan","Persatuan hanya dicapai dengan keseragaman","Keberagaman justru memperkuat identitas nasional bila dikelola dengan baik","Makin seragam makin kuat persatuannya"],jwb:2,ket:"Teori sosial modern menunjukkan keberagaman yang dikelola baik justru memperkuat kohesi sosial."},
+     {soal:"Konflik SARA (Suku, Agama, Ras, Antar-golongan) melanggar sila ke...",opsi:["Sila ke-1 saja","Sila ke-3 saja","Sila ke-1 dan ke-3 sekaligus","Sila ke-5 saja"],jwb:2,ket:"Konflik SARA melanggar sila ke-1 (toleransi) dan sila ke-3 (persatuan) secara bersamaan."}]
+  ],
+  sila4:[
+    [{soal:"Lambang sila ke-4 adalah...",opsi:["Padi dan Kapas","Kepala Banteng","Pohon Beringin","Rantai"],jwb:1,ket:"Kepala Banteng melambangkan kekuatan rakyat dalam berdemokrasi."},
+     {soal:"Sila ke-4 mengajarkan pengambilan keputusan melalui...",opsi:["Suara terbanyak mutlak","Perintah pemimpin","Musyawarah untuk mufakat","Voting online"],jwb:2,ket:"Musyawarah untuk mufakat adalah cara pengambilan keputusan yang diajarkan sila ke-4."},
+     {soal:"Banteng pada lambang sila ke-4 melambangkan...",opsi:["Keganasan alam","Kekuatan rakyat dan semangat kebersamaan","Pertanian Indonesia","Ketangguhan militer"],jwb:1,ket:"Banteng yang kuat melambangkan kekuatan rakyat dalam berdemokrasi."}],
+    [{soal:"Kedaulatan rakyat dalam sila ke-4 dilaksanakan melalui...",opsi:["Raja yang berkuasa","Perwakilan rakyat di DPR","Militer yang kuat","Presiden seorang diri"],jwb:1,ket:"Kedaulatan rakyat dilaksanakan melalui wakil-wakil di DPR yang dipilih rakyat."},
+     {soal:"Berikut yang BUKAN ciri demokrasi Pancasila adalah...",opsi:["Musyawarah mufakat","Mengutamakan kepentingan bersama","Pemimpin berkuasa mutlak tanpa batas","Kebebasan berpendapat yang bertanggung jawab"],jwb:2,ket:"Pemimpin berkuasa mutlak adalah ciri otokrasi, bukan demokrasi Pancasila."},
+     {soal:"Kata 'hikmat kebijaksanaan' dalam sila ke-4 berarti keputusan harus...",opsi:["Menguntungkan satu golongan","Dilandasi pertimbangan moral, rasional, dan kepentingan bersama","Berdasarkan suara terbanyak saja","Diambil hanya oleh para ahli"],jwb:1,ket:"Hikmat kebijaksanaan menuntut keputusan yang rasional, bermoral, dan mengutamakan kepentingan bersama."}],
+    [{soal:"Musyawarah diutamakan dalam sila ke-4 karena...",opsi:["Lebih cepat dari voting","Semua pihak didengar dan mencari solusi terbaik bersama","Lebih murah biayanya","Mudah dilakukan secara online"],jwb:1,ket:"Musyawarah mengutamakan dialog untuk mencari mufakat demi kepentingan bersama."},
+     {soal:"MPR (Majelis Permusyawaratan Rakyat) mencerminkan sila ke-4 karena...",opsi:["Dipilih langsung oleh presiden","Terdiri dari wakil-wakil rakyat yang merumuskan dan mengubah UUD","Bertugas mengadili perkara konstitusi","Memiliki kekuasaan mutlak"],jwb:1,ket:"MPR sebagai lembaga permusyawaratan tertinggi mencerminkan prinsip musyawarah dalam sila ke-4."},
+     {soal:"Perbedaan demokrasi Pancasila dan demokrasi liberal adalah...",opsi:["Keduanya identik","Demokrasi liberal lebih menekankan kebebasan individu, Pancasila menyeimbangkan individu dan masyarakat","Demokrasi Pancasila menolak pemilu","Demokrasi liberal mengutamakan musyawarah"],jwb:1,ket:"Demokrasi liberal menekankan hak individu, sedangkan Pancasila menyeimbangkan hak individu dengan kepentingan bersama."}],
+    [{soal:"Money politics (politik uang) dalam pemilu melanggar sila ke-4 karena...",opsi:["Pemborosan uang","Mencederai kedaulatan rakyat yang bebas dan murni","Melanggar aturan kampanye","Membuat pemilu mahal"],jwb:1,ket:"Money politics merusak substansi kedaulatan rakyat yang bebas dan murni."},
+     {soal:"Voting hanya dilakukan dalam musyawarah jika...",opsi:["Ada pihak yang tidak hadir","Musyawarah tidak mencapai mufakat","Ketua rapat memerintahkan","Peserta banyak yang bosan"],jwb:1,ket:"Voting adalah alternatif terakhir jika musyawarah tidak mencapai mufakat."},
+     {soal:"Tiga lembaga demokrasi perwakilan di Indonesia adalah...",opsi:["Presiden, DPR, MK","MPR, DPR, DPD","DPR, Presiden, KPU","MPR, MA, MK"],jwb:1,ket:"MPR, DPR, dan DPD adalah tiga lembaga perwakilan yang mencerminkan kedaulatan rakyat."}],
+    [{soal:"Fenomena post-truth mengancam sila ke-4 karena...",opsi:["Terlalu banyak informasi","Keputusan demokratis berbasis emosi dan disinformasi merusak kualitas musyawarah","Pemimpin tidak lagi dipercaya","Generasi muda tidak ikut memilih"],jwb:1,ket:"Post-truth merusak fondasi musyawarah yang harus didasarkan pada fakta dan kebijaksanaan."},
+     {soal:"'Tirani mayoritas' bertentangan dengan sila ke-4 karena...",opsi:["Mayoritas selalu benar","Keputusan mayoritas yang mengabaikan hak minoritas bertentangan dengan hikmat kebijaksanaan","Mayoritas terlalu dominan secara ekonomi","Tidak ada ruang untuk oposisi"],jwb:1,ket:"Hikmat kebijaksanaan mensyaratkan keputusan mempertimbangkan semua pihak, bukan hanya mayoritas."},
+     {soal:"Partisipasi warga yang paling substantif dalam demokrasi Pancasila selain memilih adalah...",opsi:["Membayar pajak","Patuh pada hukum","Mengawasi kebijakan publik dan aktif menyuarakan kepentingan rakyat","Menghindari konflik"],jwb:2,ket:"Demokrasi substantif mengharuskan warga aktif terlibat, bukan sekadar memilih sekali dalam 5 tahun."}]
+  ],
+  sila5:[
+    [{soal:"Lambang sila ke-5 adalah...",opsi:["Bintang","Kepala Banteng","Padi dan Kapas","Rantai"],jwb:2,ket:"Padi dan Kapas melambangkan kemakmuran pangan dan sandang bagi seluruh rakyat."},
+     {soal:"Sila ke-5 berbunyi...",opsi:["Kemanusiaan yang Adil dan Beradab","Keadilan Sosial bagi Seluruh Rakyat Indonesia","Persatuan Indonesia","Ketuhanan Yang Maha Esa"],jwb:1,ket:"Keadilan Sosial bagi Seluruh Rakyat Indonesia adalah bunyi sila ke-5."},
+     {soal:"Padi pada lambang sila ke-5 melambangkan...",opsi:["Keindahan alam","Sandang (pakaian)","Pangan (makanan)","Kekayaan alam"],jwb:2,ket:"Padi melambangkan kebutuhan pangan, sementara kapas melambangkan kebutuhan sandang."}],
+    [{soal:"Gotong royong merupakan wujud nilai sila ke...",opsi:["Sila ke-1","Sila ke-4","Sila ke-5","Sila ke-2"],jwb:2,ket:"Gotong royong mewujudkan keadilan sosial melalui kerja sama dan saling menolong."},
+     {soal:"Korupsi melanggar sila ke-5 karena...",opsi:["Dilarang agama","Merampas hak orang lain atas sumber daya publik","Melanggar hukum pidana saja","Merusak citra negara"],jwb:1,ket:"Korupsi mencuri hak rakyat atas keadilan dan kemakmuran yang merupakan inti sila ke-5."},
+     {soal:"Koperasi disebut soko guru ekonomi Indonesia karena...",opsi:["Koperasi adalah bisnis terbesar","Koperasi mewujudkan ekonomi kerakyatan yang sesuai sila ke-5","Koperasi tidak membayar pajak","Koperasi dikelola pemerintah"],jwb:1,ket:"Koperasi sebagai usaha bersama mewujudkan keadilan sosial dan ekonomi kerakyatan."}],
+    [{soal:"Program BPJS Kesehatan merupakan implementasi sila ke-5 karena...",opsi:["Diperintahkan oleh WHO","Memastikan akses layanan kesehatan bagi seluruh rakyat tanpa terkecuali","Mengurangi beban fiskal negara","Meningkatkan kualitas dokter Indonesia"],jwb:1,ket:"BPJS mewujudkan pemerataan akses kesehatan sebagai hak sosial seluruh rakyat."},
+     {soal:"Kesenjangan ekonomi kota-desa merupakan masalah terkait sila ke-5 karena...",opsi:["Sila ke-1 saja","Keadilan sosial yang belum merata antara kota dan desa","Sila ke-3 saja","Sila ke-4 saja"],jwb:1,ket:"Kesenjangan kota-desa adalah manifestasi belum terwujudnya keadilan sosial sila ke-5."},
+     {soal:"Koefisien Gini yang rendah menandakan...",opsi:["Pertumbuhan ekonomi tinggi","Distribusi pendapatan merata = keadilan sosial terwujud","Negara kaya","Pajak tinggi"],jwb:1,ket:"Koefisien Gini rendah = distribusi pendapatan merata = wujud keadilan sosial sila ke-5."}],
+    [{soal:"Perbedaan keadilan distributif dan keadilan prosedural adalah...",opsi:["Keduanya identik","Distributif = pembagian hasil yang adil; prosedural = proses yang adil","Hanya keadilan distributif yang penting","Hanya prosedural yang diakui Pancasila"],jwb:1,ket:"Sila ke-5 membutuhkan keduanya: distribusi hasil yang adil dan proses yang juga adil."},
+     {soal:"Kewajiban fundamental negara berdasarkan sila ke-5 adalah...",opsi:["Memaksimalkan pertumbuhan ekonomi","Menjamin distribusi kesejahteraan yang merata dan memenuhi hak dasar semua warga","Menarik investasi asing","Menjaga surplus perdagangan"],jwb:1,ket:"Distribusi kesejahteraan yang merata adalah tanggung jawab fundamental negara berdasarkan sila ke-5."},
+     {soal:"Program Indonesia Pintar (PIP) merupakan wujud sila ke-5 dalam bidang...",opsi:["Kesehatan","Pendidikan","Ketenagakerjaan","Perumahan"],jwb:1,ket:"PIP mewujudkan pemerataan akses pendidikan sebagai hak sosial seluruh rakyat Indonesia."}],
+    [{soal:"Kritik terhadap kapitalisme tanpa regulasi dari perspektif sila ke-5 adalah...",opsi:["Kapitalisme dilarang di Indonesia","Kapitalisme tanpa regulasi cenderung menciptakan ketimpangan yang melanggar keadilan sosial","Kapitalisme adalah satu-satunya sistem yang sesuai Pancasila","Sila ke-5 mendukung komunisme"],jwb:1,ket:"Pancasila menolak kapitalisme liberal tanpa regulasi maupun komunisme, mendukung ekonomi kerakyatan."},
+     {soal:"Digital divide (kesenjangan akses digital) menjadi tantangan sila ke-5 karena...",opsi:["Terlalu banyak aplikasi","Mereka yang tak punya akses digital semakin tertinggal dan memperdalam ketimpangan","Kurangnya regulasi konten digital","E-commerce menurunkan pajak negara"],jwb:1,ket:"Digital divide menciptakan ketimpangan baru yang bertentangan dengan cita-cita keadilan sosial sila ke-5."},
+     {soal:"Ekonomi kerakyatan yang dipelopori Bung Hatta mencerminkan sila ke-5 karena...",opsi:["Menolak koperasi sebagai badan usaha","Mengutamakan koperasi dan partisipasi rakyat luas sebagai pelaku ekonomi utama","Menyerahkan ekonomi sepenuhnya ke pasar bebas","Melarang investasi asing"],jwb:1,ket:"Bung Hatta mendorong koperasi sebagai soko guru ekonomi yang mewujudkan keadilan sosial."}]
+  ]
+};
+
+const SOAL_GABUNGAN=[
+  [{soal:"Sila ke-3 Pancasila berbunyi...",opsi:["Ketuhanan Yang Maha Esa","Persatuan Indonesia","Keadilan Sosial","Kemanusiaan yang Adil"],jwb:1,ket:"Persatuan Indonesia adalah sila ke-3."},
+   {soal:"Lambang sila ke-5 adalah...",opsi:["Bintang","Kepala Banteng","Padi dan Kapas","Rantai"],jwb:2,ket:"Padi dan Kapas melambangkan kemakmuran."},
+   {soal:"Pancasila ditetapkan sebagai dasar negara pada tanggal...",opsi:["1 Juni 1945","17 Agustus 1945","18 Agustus 1945","22 Juni 1945"],jwb:2,ket:"PPKI menetapkan Pancasila pada 18 Agustus 1945."}],
+  [{soal:"Jumlah bulu sayap Garuda Pancasila (satu sisi) melambangkan...",opsi:["Jumlah provinsi","Tanggal proklamasi (17)","Bulan proklamasi (8)","Tahun kemerdekaan"],jwb:1,ket:"17 bulu sayap kanan (dan kiri) melambangkan tanggal 17 Agustus."},
+   {soal:"Musyawarah untuk mufakat merupakan wujud sila ke...",opsi:["2","3","4","5"],jwb:2,ket:"Musyawarah mufakat adalah inti sila ke-4."},
+   {soal:"Semboyan 'Bhinneka Tunggal Ika' berasal dari kitab...",opsi:["Negarakertagama","Sutasoma","Pararaton","Arjunawiwaha"],jwb:1,ket:"Bhinneka Tunggal Ika dari Kitab Sutasoma karya Mpu Tantular."}],
+  [{soal:"BPUPKI dibentuk oleh Jepang pada tanggal...",opsi:["1 Maret 1945","29 April 1945","1 Juni 1945","17 Agustus 1945"],jwb:1,ket:"BPUPKI dibentuk 29 April 1945 untuk mempersiapkan kemerdekaan Indonesia."},
+   {soal:"Hubungan antar sila Pancasila bersifat...",opsi:["Hierarkis saja","Organis — saling terkait dan tidak dapat dipisahkan","Bebas dipilih sesuai kebutuhan","Tidak ada hubungannya"],jwb:1,ket:"Sila-sila Pancasila bersifat organis, saling mendukung dan tidak dapat dilepaskan."},
+   {soal:"Koefisien Gini yang rendah menunjukkan keberhasilan penerapan sila ke...",opsi:["Sila ke-1","Sila ke-3","Sila ke-4","Sila ke-5"],jwb:3,ket:"Koefisien Gini rendah = distribusi pendapatan merata = keadilan sosial sila ke-5."}],
+  [{soal:"Piagam Jakarta diubah pada 18 Agustus 1945 dengan menghapus kalimat...",opsi:["'dengan menjunjung tinggi agama'","'dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya'","'berdasarkan Tuhan Yang Maha Esa'","'seluruh tumpah darah Indonesia'"],jwb:1,ket:"Kalimat syariat Islam dihapus demi menjaga persatuan bangsa yang beragam."},
+   {soal:"Pasal 28A-28J UUD 1945 hasil amandemen mengatur tentang...",opsi:["Kekuasaan presiden","Hak Asasi Manusia","Lembaga negara","Pemerintahan daerah"],jwb:1,ket:"Pasal 28A sampai 28J mengatur tentang Hak Asasi Manusia, selaras dengan sila ke-2."},
+   {soal:"Pancasila sebagai 'ideologi terbuka' berarti...",opsi:["Pancasila bisa diganti jika tidak relevan","Nilai dasarnya tetap, namun penjabarannya dapat berkembang sesuai tantangan zaman","Pancasila hanya berlaku saat Indonesia merdeka","Pancasila sama persis seperti saat dirumuskan 1945"],jwb:1,ket:"Pancasila adalah ideologi hidup yang terus diaktualisasikan tanpa mengubah nilai fundamentalnya."}],
+  [{soal:"Korupsi merupakan ancaman terhadap seluruh sila Pancasila karena...",opsi:["Korupsi hanya masalah hukum","Korupsi merusak ketuhanan, kemanusiaan, persatuan, demokrasi, dan keadilan sekaligus","Korupsi hanya merugikan keuangan negara","Korupsi hanya melanggar sila ke-5"],jwb:1,ket:"Korupsi merusak semua sila: melecehkan nilai agama, mengingkari HAM, memecah persatuan, mencederai demokrasi, dan merampas keadilan."},
+   {soal:"Garuda Pancasila dirancang oleh...",opsi:["Ir. Soekarno","Bung Hatta","Sultan Hamid II dari Pontianak","Ki Hajar Dewantara"],jwb:2,ket:"Garuda Pancasila dirancang oleh Sultan Hamid II dari Pontianak dan disempurnakan Presiden Soekarno."},
+   {soal:"Dalam konteks hukum internasional, Pancasila berfungsi sebagai...",opsi:["Pengganti hukum internasional bagi Indonesia","Filter untuk menerima atau menolak norma internasional sesuai nilai Pancasila","Dasar untuk menolak semua perjanjian internasional","Hanya berlaku di dalam negeri"],jwb:1,ket:"Pancasila menjadi filter: Indonesia menerima norma internasional yang sesuai nilai Pancasila."}]
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+function getDeviceId() {
+  let id = localStorage.getItem('pancasilabot_deviceId');
+  if(!id) {
+    id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+    localStorage.setItem('pancasilabot_deviceId', id);
+  }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
+const STORAGE_KEY = 'pancasilabot_progress_' + DEVICE_ID;
+
+function saveProgress() {
+  try {
+    const data = {
+      kuisLevel, kuisLevelDone, gabunganUnlocked, gabunganLevel,
+      gabunganLevelDone, progressSila, progressGab, medali,
+      roomPilihanDoneArr: Object.fromEntries(
+        Object.entries(roomPilihanDone).map(([k,v]) => [k, [...v]])
+      ),
+      openedTopics
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch(e) {}
+}
+
+function loadProgressFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(d.kuisLevel)         kuisLevel = d.kuisLevel;
+    if(d.kuisLevelDone)     kuisLevelDone = d.kuisLevelDone;
+    if(d.gabunganUnlocked !== undefined) gabunganUnlocked = d.gabunganUnlocked;
+    if(d.gabunganLevel)     gabunganLevel = d.gabunganLevel;
+    if(d.gabunganLevelDone !== undefined) gabunganLevelDone = d.gabunganLevelDone;
+    if(d.progressSila)      progressSila = d.progressSila;
+    if(d.progressGab !== undefined) progressGab = d.progressGab;
+    if(d.medali)            medali = d.medali;
+    if(d.openedTopics)      openedTopics = d.openedTopics;
+    if(d.roomPilihanDoneArr) {
+      for(const [k,v] of Object.entries(d.roomPilihanDoneArr)) {
+        roomPilihanDone[k] = new Set(v);
+      }
+    }
+  } catch(e) {}
+}
+
+let activeTab = '';
+let chatRooms = {};
+let openedTopics = [];
+let kuisLevel = {sila1:1,sila2:1,sila3:1,sila4:1,sila5:1};
+let kuisLevelDone = {sila1:0,sila2:0,sila3:0,sila4:0,sila5:0};
+let gabunganUnlocked = false;
+let gabunganLevel = 1;
+let gabunganLevelDone = 0;
+let progressSila = {1:0,2:0,3:0,4:0,5:0};
+let progressGab = 0;
+let medali = {med1:false,med2:false,med3:false,med4:false,med5:false,medKuis:false};
+let kuisMode = null;
+let kuisCurrentLevel = 1;
+let soalList = [];
+let soalKe = 0;
+let totalBenar = 0;
+let sudahJawab = false;
+let roomPilihanDone = {};
+let roomInputVal = {};
+
+const TOTAL_PILIHAN = {sila1:6,sila2:6,sila3:6,sila4:6,sila5:6,sejarah:6,nilai:6,lambang:6};
+const MAX_LEVEL = 5;
+
+function jam(){
+  const n = new Date();
+  return n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0');
+}
+
+function toggleSidebar(){
+  const sb = document.getElementById('mainSidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if(!sb) return;
+  sb.classList.toggle('open');
+  if(sb.classList.contains('open')) ov.classList.add('show');
+  else ov.classList.remove('show');
+}
+function closeSidebar(){
+  const sb = document.getElementById('mainSidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  if(sb) sb.classList.remove('open');
+  if(ov) ov.classList.remove('show');
+}
+
+function tampilSelamat(icon, title, score, scoreLabel, sub){
+  const ov = document.getElementById('selamatOverlay');
+  document.getElementById('selamatIcon').textContent = icon;
+  document.getElementById('selamatTitle').textContent = title;
+  document.getElementById('selamatScore').textContent = score;
+  document.getElementById('selamatScoreLabel').textContent = scoreLabel;
+  document.getElementById('selamatSub').innerHTML = sub;
+  if(ov) ov.classList.add('show');
+}
+function tutupSelamat(){
+  const ov = document.getElementById('selamatOverlay');
+  if(ov) ov.classList.remove('show');
+}
+
+/* ============================================================
+   ROOM MANAGEMENT
+   ============================================================ */
+function ensureRoom(topikId) {
+  if(chatRooms[topikId]) return;
+  chatRooms[topikId] = {initialized:false};
+  if(!roomPilihanDone[topikId]) roomPilihanDone[topikId] = new Set();
+  roomInputVal[topikId] = '';
+  const rooms = document.getElementById('chatRooms');
+  const div = document.createElement('div');
+  div.className = 'chat-room';
+  div.id = 'room-' + topikId;
+  const LABEL = TOPIK_LABEL[topikId] || topikId;
+  div.innerHTML = `
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="bot-avatar" style="overflow:hidden;padding:0;background:#fff;"><img src="pancasila.png" style="width:100%;height:100%;object-fit:cover;"/></div>
+        <div>
+          <div class="bot-name">Sila — Asisten Pancasila</div>
+          <div class="bot-status"><span class="dot-online"></span> Online</div>
+        </div>
+      </div>
+      <div class="topik-badge">${LABEL}</div>
+    </div>
+    <div class="chat-body" id="body-${topikId}">
+      <div class="date-divider">Hari ini</div>
+    </div>
+    <div class="chat-footer">
+      <div class="choices-row" id="choices-${topikId}"></div>
+      <div class="input-row">
+        <div class="chat-input-box" id="input-${topikId}" onclick="toggleChoices('${topikId}')" title="Klik untuk memilih topik">
+          <span id="inputText-${topikId}" style="color:#aaa">Pilih topik di atas...</span>
+        </div>
+        <button class="btn-send" id="sendBtn-${topikId}" onclick="kirimPilihan('${topikId}')" title="Kirim">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  `;
+  rooms.appendChild(div);
+}
+
+function ensureTab(topikId) {
+  const bar = document.getElementById('tabBar');
+  if(document.querySelector(`.tab-item[data-room="${topikId}"]`)) return;
+  const numMap  = {sila1:'1',sila2:'2',sila3:'3',sila4:'4',sila5:'5',sejarah:'📜',nilai:'⭐',lambang:'🦅'};
+  const nameMap = {sila1:'Ketuhanan',sila2:'Kemanusiaan',sila3:'Persatuan',sila4:'Kerakyatan',sila5:'Keadilan',sejarah:'Sejarah',nilai:'Nilai',lambang:'Garuda'};
+  const tab = document.createElement('div');
+  tab.className = 'tab-item';
+  tab.dataset.room = topikId;
+  tab.onclick = () => switchTab(topikId, tab);
+  tab.innerHTML = `<div class="tab-num">${numMap[topikId]||'?'}</div>${nameMap[topikId]||topikId}`;
+  bar.appendChild(tab);
+}
+
+function switchTab(topikId, el) {
+  activeTab = topikId;
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else { const t = document.querySelector(`.tab-item[data-room="${topikId}"]`); if(t) t.classList.add('active'); }
+  document.querySelectorAll('.chat-room').forEach(r => r.classList.remove('active'));
+  const room = document.getElementById('room-' + topikId);
+  if(room) room.classList.add('active');
+}
+
+function pilihTopik(id, el) {
+  const ws = document.getElementById('welcomeScreen');
+  if(ws) ws.style.display = 'none';
+  closeSidebar();
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  ensureTab(id);
+  ensureRoom(id);
+  // Catat topik yang pernah dibuka
+if(!openedTopics.includes(id)){
+  openedTopics.push(id);
+  saveProgress();
+}
+  switchTab(id, null);
+  if(!chatRooms[id].initialized) {
+    chatRooms[id].initialized = true;
+    const k = KONTEN[id];
+    if(!k) { addBubble(id, 'Konten untuk topik ini sedang dalam pengembangan. 🚧', 'bot'); return; }
+    showTyping(id, () => {
+      addBubble(id, k.intro, 'bot');
+      renderChoices(id);
+    });
+    updateProgressForTopic(id, roomPilihanDone[id] ? roomPilihanDone[id].size : 0);
+  }
+}
+
+/* ============================================================
+   CHOICES & INPUT — PERBAIKAN BUG UTAMA DI SINI
+   ============================================================ */
+function renderChoices(roomId) {
+  const k = KONTEN[roomId];
+  if(!k || !k.pilihan) return;
+  const container = document.getElementById('choices-' + roomId);
+  if(!container) return;
+  container.innerHTML = '';
+  if(!roomPilihanDone[roomId]) roomPilihanDone[roomId] = new Set();
+  k.pilihan.forEach(p => {
+    const done = roomPilihanDone[roomId].has(p);
+    const chip = document.createElement('button');
+    chip.className = 'choice-chip' + (done ? ' selected' : '');
+    chip.textContent = (done ? '✓ ' : '') + p;
+    chip.onclick = () => selectChoice(roomId, p, chip);
+    container.appendChild(chip);
+  });
+}
+
+function selectChoice(roomId, pilihan, chipEl) {
+  /* simpan nilai ke state */
+  roomInputVal[roomId] = pilihan;
+
+  /* update tampilan input box */
+  const inputBox  = document.getElementById('input-' + roomId);
+  const inputText = document.getElementById('inputText-' + roomId);
+  if(inputBox)  inputBox.classList.add('has-val');
+  if(inputText) { inputText.style.color = '#1a1a1a'; inputText.textContent = pilihan; }
+
+  /* aktifkan tombol kirim */
+  const sendBtn = document.getElementById('sendBtn-' + roomId);
+  if(sendBtn) sendBtn.classList.add('active');
+
+  /* tandai chip yang dipilih */
+  const container = document.getElementById('choices-' + roomId);
+  if(container) {
+    container.querySelectorAll('.choice-chip').forEach(c => c.classList.remove('selected'));
+    chipEl.classList.add('selected');
+  }
+}
+
+function toggleChoices(roomId) {
+  /* klik pada input box saat sudah ada nilai → reset */
+  if(roomInputVal[roomId]) {
+    roomInputVal[roomId] = '';
+    const inputBox  = document.getElementById('input-' + roomId);
+    const inputText = document.getElementById('inputText-' + roomId);
+    if(inputBox)  inputBox.classList.remove('has-val');
+    if(inputText) { inputText.style.color = '#aaa'; inputText.textContent = 'Pilih topik di atas...'; }
+    const sendBtn = document.getElementById('sendBtn-' + roomId);
+    if(sendBtn) sendBtn.classList.remove('active');
+    const container = document.getElementById('choices-' + roomId);
+    if(container) container.querySelectorAll('.choice-chip').forEach(c => c.classList.remove('selected'));
+  }
+}
+
+/* ---- FUNGSI UTAMA YANG DIPERBAIKI ---- */
+function kirimPilihan(roomId) {
+  /* ambil nilai yang sudah disimpan saat chip diklik */
+  const val = roomInputVal[roomId];
+
+  /* guard: harus ada nilai */
+  if(!val || val.trim() === '') return;
+
+  const k = KONTEN[roomId];
+  if(!k) return;
+
+  /* tampilkan bubble user */
+  addBubble(roomId, val, 'user');
+
+  /* reset state input */
+  roomInputVal[roomId] = '';
+  const inputBox  = document.getElementById('input-' + roomId);
+  const inputText = document.getElementById('inputText-' + roomId);
+  if(inputBox)  inputBox.classList.remove('has-val');
+  if(inputText) { inputText.style.color = '#aaa'; inputText.textContent = 'Pilih topik di atas...'; }
+  const sendBtn = document.getElementById('sendBtn-' + roomId);
+  if(sendBtn) sendBtn.classList.remove('active');
+
+  /* catat pilihan yang sudah dilakukan */
+  if(!roomPilihanDone[roomId]) roomPilihanDone[roomId] = new Set();
+  roomPilihanDone[roomId].add(val);
+
+  /* update progress */
+  updateProgressForTopic(roomId, roomPilihanDone[roomId].size);
+  checkMedaliForTopic(roomId);
+  saveProgress();
+
+  /* tampilkan respon bot dengan efek typing */
+  showTyping(roomId, () => {
+    const resp = k[val] || `Pilih topik lain untuk melanjutkan! 😊`;
+    addBubble(roomId, resp, 'bot');
+    renderChoices(roomId);
+  });
+}
+
+function updateProgressForTopic(topikId, donePilihan) {
+  const num = parseInt(topikId.replace('sila',''));
+  if(isNaN(num) || num < 1 || num > 5) return;
+  const total = TOTAL_PILIHAN[topikId] || 6;
+  const newPct = Math.min(100, 10 + Math.round((donePilihan / total) * 90));
+  if(newPct > progressSila[num]) {
+    progressSila[num] = newPct;
+    const pb = document.getElementById('pb' + num);
+    const pt = document.getElementById('pct' + num);
+    if(pb) pb.style.width = newPct + '%';
+    if(pt) pt.textContent = newPct + '%';
+  }
+}
+
+function checkMedaliForTopic(topikId) {
+  const num = parseInt(topikId.replace('sila',''));
+  if(isNaN(num) || num < 1 || num > 5) return;
+  if(progressSila[num] >= 70 && !medali['med' + num]) {
+    medali['med' + num] = true;
+  const medals = {1:'🥇', 2:'🥈', 3:'🥉', 4:'🏅', 5:'🎖️'};
+  const names  = {1:'Pelajar Sila 1', 2:'Pelajar Sila 2', 3:'Pelajar Sila 3', 4:'Pelajar Sila 4', 5:'Pelajar Sila 5'};
+  }
+}
+
+/* ============================================================
+   BUBBLE HELPERS — userName dihapus (tidak pernah didefinisikan)
+   ============================================================ */
+function addBubble(roomId, html, siapa) {
+  const body = document.getElementById('body-' + roomId);
+  if(!body) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'bubble-wrap ' + siapa;
+  const av  = document.createElement('div');
+  av.className = 'bub-avatar ' + (siapa === 'user' ? 'user-av' : '');
+  /* PERBAIKAN: hapus referensi userName yang tidak terdefinisi */
+  if (siapa === 'user') {
+  av.textContent = '👤';
+  } else {
+  av.innerHTML = '<img src="pancasila.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>';
+  av.style.background = '#fff';
+  av.style.padding = '0';
+  av.style.overflow = 'hidden';
+}
+  const col = document.createElement('div');
+  const bub = document.createElement('div');
+  bub.className = 'bubble ' + siapa;
+  bub.innerHTML = html + '<div class="ts">' + jam() + '</div>';
+  col.appendChild(bub);
+  if(siapa === 'user') { wrap.appendChild(col); wrap.appendChild(av); }
+  else { wrap.appendChild(av); wrap.appendChild(col); }
+  body.appendChild(wrap);
+  body.scrollTop = body.scrollHeight;
+}
+
+function showTyping(roomId, cb) {
+  const body = document.getElementById('body-' + roomId);
+  if(!body) return;
+  const d   = document.createElement('div');
+  d.className = 'bubble-wrap bot';
+  d.id = 'typing-' + roomId;
+  const av   = document.createElement('div');
+  av.className = 'bub-avatar';
+  av.innerHTML = '<img src="pancasila.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>';
+  av.style.background = '#fff';
+  av.style.padding = '0';
+  av.style.overflow = 'hidden';
+  const dots = document.createElement('div');
+  dots.className = 'typing-dots';
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  d.appendChild(av); d.appendChild(dots);
+  body.appendChild(d);
+  body.scrollTop = body.scrollHeight;
+  setTimeout(() => { const t = document.getElementById('typing-' + roomId); if(t) t.remove(); cb(); }, 700);
+}
+
+/* ============================================================
+   PROGRESS KUIS
+   ============================================================ */
+function addKuisProgress(silaNr, levelDone) {
+  const bonus  = levelDone * 14;
+  const newPct = Math.min(100, Math.max(progressSila[silaNr], bonus));
+  progressSila[silaNr] = newPct;
+  checkMedaliForTopic('sila' + silaNr);
+}
+
+function checkGabunganUnlock() {
+  const allDone = Object.values(kuisLevelDone).every(v => v >= MAX_LEVEL);
+  if(allDone && !gabunganUnlocked) {
+    gabunganUnlocked = true;
+    saveProgress();
+  }
+}
+
+/* ============================================================
+   KUIS
+   ============================================================ */
+function bukaKuisMenu() {
+  closeSidebar();
+  const ov = document.getElementById('kuisOverlay');
+  if(!ov) return;
+  ov.classList.add('show');
+  const jd = document.getElementById('kuisJudul'); if(jd) jd.textContent = '🧠 Pilih Kuis';
+  const bl = document.getElementById('btnLanjut'); if(bl) bl.style.display = 'none';
+  const bb = document.getElementById('btnBack');   if(bb) bb.style.display = 'none';
+  renderKuisMenu();
+}
+
+function renderKuisMenu() {
+  const SILA_QR = ['Ketuhanan','Kemanusiaan','Persatuan','Kerakyatan','Keadilan Sosial'];
+  let html = `<div class="kuis-select-title">Pilih Kuis Berdasarkan Topik</div>
+  <div class="kuis-select-sub">Harus jawab SEMUA soal benar 100% untuk naik level!</div>`;
+  for(let i = 1; i <= 5; i++) {
+    const k       = 'sila' + i;
+    const done    = kuisLevelDone[k];
+    const cur     = kuisLevel[k];
+    const allDone = done >= MAX_LEVEL;
+    const stars   = '★'.repeat(done) + '☆'.repeat(MAX_LEVEL - done);
+    html += `<button class="sila-kuis-btn" onclick="mulaiKuis('${k}')">
+      <div class="sk-num">${i}</div>
+      <div class="sk-info">
+        <div class="sk-name">Sila ke-${i}: ${SILA_QR[i-1]}</div>
+        <div class="sk-desc">${allDone ? 'Semua level selesai ✅' : 'Level ' + cur + ' dari ' + MAX_LEVEL}</div>
+      </div>
+      <div class="sk-level" style="color:${allDone ? '#27ae60' : '#C0392B'}">${stars}</div>
+    </button>`;
+  }
+  const gabLocked  = !gabunganUnlocked;
+  const gabDone    = gabunganLevelDone;
+  const gabCur     = gabunganLevel;
+  const gabAllDone = gabDone >= MAX_LEVEL;
+  const gabStars   = '★'.repeat(gabDone) + '☆'.repeat(MAX_LEVEL - gabDone);
+  html += `<button class="sila-kuis-btn gabungan" onclick="mulaiKuis('gabungan')" ${gabLocked ? 'disabled' : ''}>
+    <div class="sk-num">🏆</div>
+    <div class="sk-info">
+      <div class="sk-name">Kuis Gabungan – Semua Sila</div>
+      <div class="sk-desc">${gabLocked ? '🔒 Selesaikan semua level kuis tiap sila' : gabAllDone ? 'Semua level selesai ✅' : 'Level ' + gabCur + ' dari ' + MAX_LEVEL}</div>
+    </div>
+    <div class="sk-level" style="color:${gabLocked ? '#bbb' : gabAllDone ? '#27ae60' : '#b8860b'}">${gabLocked ? '🔒' : gabStars}</div>
+  </button>`;
+  const kb = document.getElementById('kuisBody');
+  if(kb) kb.innerHTML = html;
+}
+
+function mulaiKuis(mode) {
+  kuisMode = mode;
+  if(mode === 'gabungan') {
+    if(!gabunganUnlocked) return;
+    kuisCurrentLevel = gabunganLevel;
+    soalList = [...SOAL_GABUNGAN[kuisCurrentLevel - 1]];
+  } else {
+    kuisCurrentLevel = kuisLevel[mode];
+    soalList = [...SOAL_SILA[mode][kuisCurrentLevel - 1]];
+  }
+  soalKe = 0; totalBenar = 0; sudahJawab = false;
+  const bl = document.getElementById('btnLanjut');
+  if(bl) { bl.style.display = ''; bl.disabled = true; bl.textContent = 'Lanjut'; }
+  const bb = document.getElementById('btnBack');
+  if(bb) bb.style.display = '';
+  const lbl = mode === 'gabungan' ? 'Kuis Gabungan' : 'Kuis Sila ke-' + mode.replace('sila','');
+  const jd = document.getElementById('kuisJudul');
+  if(jd) jd.textContent = '🧠 ' + lbl;
+  tampilSoal();
+}
+
+function tampilSoal() {
+  sudahJawab = false;
+  const soal = soalList[soalKe];
+  const bl = document.getElementById('btnLanjut');
+  if(bl) { bl.disabled = true; bl.textContent = soalKe < soalList.length - 1 ? 'Lanjut' : 'Lihat Hasil'; }
+  const huruf = ['A','B','C','D'];
+  const levelLabel = `Level ${kuisCurrentLevel} / ${MAX_LEVEL} — Soal ${soalKe + 1} / ${soalList.length}`;
+  let html = `<div class="level-info-bar"><span class="li-left">${levelLabel}</span><span class="li-right">${'⭐'.repeat(kuisCurrentLevel)}</span></div>`;
+  html += `<div class="kuis-nomor">Soal ${soalKe + 1} dari ${soalList.length}</div>`;
+  html += `<div class="kuis-soal">${soal.soal}</div><div class="kuis-opsi">`;
+  soal.opsi.forEach((o, i) => {
+    html += `<button class="opsi-btn" onclick="pilihJawaban(${i},this)"><span class="opsi-huruf">${huruf[i]}</span>${o}</button>`;
+  });
+  html += `</div><div class="kuis-hasil" id="hasilKuis"></div>`;
+  const kb = document.getElementById('kuisBody');
+  if(kb) kb.innerHTML = html;
+}
+
+function pilihJawaban(idx, btn) {
+  if(sudahJawab) return;
+  sudahJawab = true;
+  const soal  = soalList[soalKe];
+  const benar = soal.jwb;
+  const semua = document.querySelectorAll('.opsi-btn');
+  semua.forEach(b => b.disabled = true);
+  semua[benar].classList.add('benar');
+  if(idx !== benar) btn.classList.add('salah'); else totalBenar++;
+  const hasil = document.getElementById('hasilKuis');
+  if(hasil) {
+    hasil.style.display = 'block';
+    if(idx === benar) { hasil.className = 'kuis-hasil benar'; hasil.textContent = '✅ Benar! ' + soal.ket; }
+    else { hasil.className = 'kuis-hasil salah'; hasil.textContent = '❌ Belum tepat. ' + soal.ket; }
+  }
+  const bl = document.getElementById('btnLanjut');
+  if(bl) bl.disabled = false;
+}
+
+function soalBerikut() {
+  soalKe++;
+  if(soalKe < soalList.length) { tampilSoal(); return; }
+  const persen = Math.round(totalBenar / soalList.length * 100);
+  const passed = totalBenar === soalList.length;
+  const icon   = passed ? '🏆' : '📚';
+  const ket    = passed ? 'Sempurna! Semua jawaban benar — kamu naik ke level berikutnya! 🎉' : 'Kamu harus menjawab SEMUA soal dengan benar untuk naik level. Ulangi lagi!';
+  const bl = document.getElementById('btnLanjut');
+  const levelLabel = kuisMode === 'gabungan' ? 'Kuis Gabungan' : 'Sila ke-' + kuisMode.replace('sila','');
+
+  if(passed) {
+    if(kuisMode === 'gabungan') {
+      if(kuisCurrentLevel > gabunganLevelDone) gabunganLevelDone = kuisCurrentLevel;
+      progressGab = Math.min(100, gabunganLevelDone * 20);
+      if(gabunganLevelDone >= MAX_LEVEL && !medali.medKuis) {
+        medali.medKuis = true;
+      }
+      if(gabunganLevel < MAX_LEVEL) gabunganLevel++;
+    } else {
+      const silaNr = parseInt(kuisMode.replace('sila',''));
+      if(kuisCurrentLevel > kuisLevelDone[kuisMode]) kuisLevelDone[kuisMode] = kuisCurrentLevel;
+      addKuisProgress(silaNr, kuisLevelDone[kuisMode]);
+      if(kuisLevel[kuisMode] < MAX_LEVEL) kuisLevel[kuisMode]++;
+      checkGabunganUnlock();
+    }
+    saveProgress();
+    setTimeout(() => {
+      tampilSelamat(
+        icon,
+        'Selamat! Kamu Lulus!',
+        totalBenar + '/' + soalList.length,
+        'Nilai: ' + persen + '% ✅ Lulus',
+        ket
+      );
+    }, 200);
+  }
+
+  let nextBtn = '';
+  if(passed && kuisCurrentLevel < MAX_LEVEL) {
+    nextBtn = `<button class="btn-lanjut" style="margin-top:8px" onclick="lanjutLevelBerikut()">Level ${kuisCurrentLevel + 1}</button>`;
+  } else if(passed && kuisCurrentLevel >= MAX_LEVEL) {
+    nextBtn = `<button class="btn-lanjut" style="margin-top:8px;background:#27ae60" onclick="kembaliKeMenu()">Semua Level Selesai! 🎉</button>`;
+  } else {
+    nextBtn = `<button class="btn-lanjut" style="margin-top:8px;background:#e67e22" onclick="ulangiLevel()">Ulangi Level</button>`;
+  }
+
+  const kb = document.getElementById('kuisBody');
+  if(kb) kb.innerHTML = `
+    <div style="text-align:center;padding:10px 0;">
+      <div style="font-size:52px;margin-bottom:8px;">${icon}</div>
+      <div style="font-size:14px;color:#888;margin-bottom:4px;">${levelLabel} — Level ${kuisCurrentLevel}</div>
+      <div style="font-size:44px;font-weight:800;color:#C0392B;">${totalBenar}/${soalList.length}</div>
+      <div style="font-size:13px;color:#777;margin:4px 0 12px;">Nilai: ${persen}% ${passed ? '✅ Lulus' : '❌ Belum lulus (perlu 100%)'}</div>
+      <div style="font-size:13.5px;color:#444;line-height:1.5;margin-bottom:12px;">${ket}</div>
+      ${nextBtn}
+    </div>`;
+  if(bl) bl.style.display = 'none';
+}
+
+function lanjutLevelBerikut() {
+  const nextLevel = kuisCurrentLevel + 1;
+  kuisCurrentLevel = nextLevel;
+  let newSoal;
+  if(kuisMode === 'gabungan') { newSoal = [...SOAL_GABUNGAN[nextLevel - 1]]; gabunganLevel = nextLevel; }
+  else { newSoal = [...SOAL_SILA[kuisMode][nextLevel - 1]]; kuisLevel[kuisMode] = nextLevel; }
+  soalList = newSoal; soalKe = 0; totalBenar = 0; sudahJawab = false;
+  const bl = document.getElementById('btnLanjut');
+  if(bl) { bl.style.display = ''; bl.disabled = true; bl.textContent = 'Lanjut →'; }
+  const lbl = kuisMode === 'gabungan' ? 'Kuis Gabungan' : 'Kuis Sila ke-' + kuisMode.replace('sila','');
+  const jd = document.getElementById('kuisJudul');
+  if(jd) jd.textContent = '🧠 ' + lbl;
+  tampilSoal();
+}
+
+function ulangiLevel() {
+  soalList = kuisMode === 'gabungan'
+    ? [...SOAL_GABUNGAN[kuisCurrentLevel - 1]]
+    : [...SOAL_SILA[kuisMode][kuisCurrentLevel - 1]];
+  soalKe = 0; totalBenar = 0; sudahJawab = false;
+  const bl = document.getElementById('btnLanjut');
+  if(bl) { bl.style.display = ''; bl.disabled = true; bl.textContent = 'Lanjut'; }
+  tampilSoal();
+}
+
+function kembaliKeMenu() {
+  const bl = document.getElementById('btnLanjut'); if(bl) bl.style.display = 'none';
+  const bb = document.getElementById('btnBack');   if(bb) bb.style.display = 'none';
+  const jd = document.getElementById('kuisJudul'); if(jd) jd.textContent = '🧠 Pilih Kuis';
+  renderKuisMenu();
+}
+
+function tutupKuis() {
+  const ov = document.getElementById('kuisOverlay');
+  if(ov) ov.classList.remove('show');
+}
+
+loadProgressFromStorage();
+checkGabunganUnlock();
+
+// Cek nama
+const namaTersimpan = localStorage.getItem('pancasilabot_nama');
+if(!namaTersimpan){ window.location.href = 'onboarding1.html'; }
+else {
+  const av = document.getElementById('topbarUserAvatar');
+  if(av) av.innerHTML = `<span style="font-size:13px;font-weight:800;">${namaTersimpan.charAt(0).toUpperCase()}</span>`;
+}
+
+// Restore tabs & rooms dari sesi sebelumnya
+if(openedTopics && openedTopics.length > 0){
+  const ws = document.getElementById('welcomeScreen');
+  if(ws) ws.style.display = 'none';
+  openedTopics.forEach(id => {
+    ensureTab(id);
+    ensureRoom(id);
+    if(!chatRooms[id].initialized){
+      chatRooms[id].initialized = true;
+      const k = KONTEN[id];
+      if(k){
+        addBubble(id, k.intro, 'bot');
+        renderChoices(id);
+      }
+    }
+  });
+  // Aktifkan tab terakhir
+  const lastTab = openedTopics[openedTopics.length - 1];
+  switchTab(lastTab, null);
+  const navEl = document.getElementById('nav-' + lastTab);
+  if(navEl){
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
+  }
+}
+</script>
+</body>
+</html>
